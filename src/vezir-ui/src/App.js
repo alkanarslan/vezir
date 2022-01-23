@@ -3,6 +3,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 import Login from './components/Login/Login';
 import Topbar from './components/Topbar/Topbar';
 import Sidebar from './components/Sidebar/Sidebar';
+import VFrame from './components/VFrame/VFrame';
 import { ChakraProvider, theme } from '@chakra-ui/react';
 import './App.css';
 
@@ -13,14 +14,16 @@ function App() {
         <Topbar />
         <div className="container">
           <Sidebar></Sidebar>
-          <div className="otherpage">orher page</div>
+          <div className="otherpage">
+            <Routes>
+              <Route path="/"></Route>
+              <Route path="invoices/:invoiceId" element={<Invoice />} />
+              <Route path="expenses" element={<Dashboard />} />
+              <Route path="login" element={<Login />} />
+              <Route path="frame" element={<VFrame />} />
+            </Routes>
+          </div>
         </div>
-        <Routes>
-          <Route path="/"></Route>
-          <Route path="invoices/:invoiceId" element={<Invoice />} />
-          <Route path="expenses" element={<Dashboard />} />
-          <Route path="login" element={<Login />} />
-        </Routes>
       </div>
     </ChakraProvider>
   );
