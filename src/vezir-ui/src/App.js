@@ -1,82 +1,34 @@
-import React from 'react';
-import {
-  ChakraProvider,
-  Box,
-  Grid,
-  theme,
-  Stack,
-  Button,
-  Flex,
-  Image,
-} from '@chakra-ui/react';
-import { AtSignIcon, LockIcon } from '@chakra-ui/icons';
-import { ColorModeSwitcher } from './ColorModeSwitcher';
-import {
-  Input,
-  InputGroup,
-  InputLeftElement,
-  InputRightElement,
-} from '@chakra-ui/react';
-import VezirLogo from './images/vezir-logo.svg';
+import { Routes, Route, useParams } from 'react-router-dom';
+import Dashboard from './components/Dashboard/Dashboard';
+import Login from './components/Login/Login';
+import Topbar from './components/Topbar/Topbar';
+import Sidebar from './components/Sidebar/Sidebar';
+import { ChakraProvider, theme } from '@chakra-ui/react';
+import './App.css';
 
 function App() {
-  const [show, setShow] = React.useState(false);
-  const handleClick = () => setShow(!show);
-
   return (
-    <Flex
-      flexDirection="column"
-      width="100wh"
-      height="100vh"
-      backgroundColor="gray.200"
-      justifyContent="center"
-      alignItems="center"
-    >
-      <ChakraProvider theme={theme}>
-        <Box textAlign="center" fontSize="xl">
-          <Grid minH="100vh" p={1}>
-            <ColorModeSwitcher justifySelf="flex-end" />
-
-            <Stack spacing={4}>
-              <Image
-                src={VezirLogo}
-                alt="Vezir Logo"
-                fill="white"
-                stroke="#0066ff"
-              />
-              <InputGroup>
-                <InputLeftElement
-                  pointerEvents="none"
-                  children={<AtSignIcon color="gray.300" />}
-                />
-                <Input type="email" placeholder="Mail Adresi" />
-              </InputGroup>
-
-              <InputGroup size="md">
-                <InputLeftElement
-                  pointerEvents="none"
-                  children={<LockIcon color="gray.300" />}
-                />
-                <Input
-                  pr="4.5rem"
-                  type={show ? 'text' : 'password'}
-                  placeholder="Şifre"
-                />
-                <InputRightElement width="4.5rem">
-                  <Button h="1.75rem" size="sm" onClick={handleClick}>
-                    {show ? 'Gizle' : 'Göster'}
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-              <Button loadingText="Giriş Yapılıyor" variant="solid">
-                Giriş Yap
-              </Button>
-            </Stack>
-          </Grid>
-        </Box>
-      </ChakraProvider>
-    </Flex>
+    <ChakraProvider theme={theme}>
+      <div className="App">
+        <Topbar />
+        <div className="container">
+          <Sidebar></Sidebar>
+          <div className="otherpage">orher page</div>
+        </div>
+        <Routes>
+          <Route path="/"></Route>
+          <Route path="invoices/:invoiceId" element={<Invoice />} />
+          <Route path="expenses" element={<Dashboard />} />
+          <Route path="login" element={<Login />} />
+        </Routes>
+      </div>
+    </ChakraProvider>
   );
+}
+
+function Invoice() {
+  let params = useParams();
+  return <h1>Invoice {params.invoiceId}</h1>;
 }
 
 export default App;

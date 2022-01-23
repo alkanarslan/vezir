@@ -1,0 +1,25 @@
+.topbar {
+  width: 100%;
+  height: 50px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.topbarWrapper {
+  height: 100%;
+  padding: 0px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  padding: 0px 20px;
+}
+
+.topLeft {
+  padding-top: 5px;
+}
+.topbarIconContainer {
+  position: relative;
+}
