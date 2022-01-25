@@ -8,7 +8,7 @@ import {
   Input,
 } from '@chakra-ui/react';
 
-export default function VFrame(props) {
+export default function CurrentAccount(props) {
   function validateName(value) {
     let error;
     if (!value) {

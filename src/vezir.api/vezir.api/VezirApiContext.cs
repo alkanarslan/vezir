@@ -21,6 +21,7 @@ namespace vezir.api;
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
         public virtual DbSet<Task> Tasks { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<CurrentAccount> CurrentAccount { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
