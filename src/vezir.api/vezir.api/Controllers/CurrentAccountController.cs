@@ -4,7 +4,6 @@ using vezir.api.Model;
 
 namespace vezir.api.Controllers;
 
-
 [Route("api/[controller]")]
 [ApiController]
 public class CurrentAccountController : Controller
@@ -15,6 +14,7 @@ public class CurrentAccountController : Controller
     {
         _currentAccount = currentAccount;
     }
+
     [HttpGet]
     public async Task<IActionResult> Get(int currentAccountId)
     {
@@ -23,12 +23,10 @@ public class CurrentAccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(CurrentAccount currentAccount )
+    public async Task<IActionResult> Post(CurrentAccount currentAccount)
     {
-      currentAccount.CreateDate = DateTime.Now;
+        currentAccount.CreateDate = DateTime.Now;
         var saveTaskResponse = await _currentAccount.SetCurrentAccount(currentAccount);
         return Ok(saveTaskResponse);
     }
-
-   
 }

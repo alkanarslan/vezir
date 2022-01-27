@@ -7,7 +7,7 @@ using vezir.api.Interface;
 using vezir.api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var  vezirAllowSpecificOrigins = "_vezirAllowSpecificOrigins";
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -31,7 +31,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
  
     });
  
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: vezirAllowSpecificOrigins,
+        builder =>
+        {
+            builder.WithOrigins("*").AllowAnyHeader()
+                .AllowAnyMethod();
+            
+        });
+});
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ITaskService, TaskService>();
@@ -48,7 +57,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-
+app.UseCors(vezirAllowSpecificOrigins);
 app.UseAuthentication();
 app.UseAuthorization();
 

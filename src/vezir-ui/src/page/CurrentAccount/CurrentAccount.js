@@ -1,5 +1,6 @@
 import { React } from 'react';
 import { Formik, Field, Form } from 'formik';
+import axios from 'axios';
 import {
   FormControl,
   FormLabel,
@@ -13,41 +14,44 @@ export default function CurrentAccount(props) {
     let error;
     if (!value) {
       // error = 'Name is required';
-    } else if (value.toLowerCase() !== 'naruto') {
-      //error = "Jeez! You're not a fan 😱";
     }
     return error;
   }
 
   return (
     <Formik
-      initialValues={{ name: '', lastname: '' }}
+      initialValues={{ firmName: '', description: '' }}
       onSubmit={(values, actions) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
-          actions.setSubmitting(false);
-        }, 1000);
+        axios
+          .post('https://localhost:7251/api/CurrentAccount', values)
+          .then(response => console.log(response.data.id))
+          .catch(error => {
+            console.error('There was an error!', error);
+          });
+        actions.setSubmitting(false);
       }}
     >
       {props => (
         <Form>
-          <Field name="name" validate={validateName}>
+          <Field name="firmName" validate={validateName}>
             {({ field, form }) => (
-              <FormControl isInvalid={form.errors.name && form.touched.name}>
-                <FormLabel htmlFor="name">First name</FormLabel>
-                <Input {...field} id="name" placeholder="name" />
-                <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+              <FormControl
+                isInvalid={form.errors.firmName && form.touched.firmName}
+              >
+                <FormLabel htmlFor="firmName">Firm Adı</FormLabel>
+                <Input {...field} id="firmName" placeholder="Firma Adı" />
+                <FormErrorMessage>{form.errors.firmName}</FormErrorMessage>
               </FormControl>
             )}
           </Field>
-          <Field name="lastname" validate={validateName}>
+          <Field name="description" validate={validateName}>
             {({ field, form }) => (
               <FormControl
-                isInvalid={form.errors.lastname && form.touched.lastname}
+                isInvalid={form.errors.description && form.touched.description}
               >
-                <FormLabel htmlFor="lastname">Last name</FormLabel>
-                <Input {...field} id="lastname" placeholder="lastname" />
-                <FormErrorMessage>{form.errors.lastname}</FormErrorMessage>
+                <FormLabel htmlFor="description">Açıklama</FormLabel>
+                <Input {...field} id="description" placeholder="Açıklama" />
+                <FormErrorMessage>{form.errors.description}</FormErrorMessage>
               </FormControl>
             )}
           </Field>
