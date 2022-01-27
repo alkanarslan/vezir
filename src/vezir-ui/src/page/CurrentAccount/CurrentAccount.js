@@ -1,6 +1,6 @@
 import { React } from 'react';
 import { Formik, Field, Form } from 'formik';
-import axios from 'axios';
+import axios from '../../Axios-VezirApi';
 import {
   FormControl,
   FormLabel,
@@ -23,7 +23,7 @@ export default function CurrentAccount(props) {
       initialValues={{ firmName: '', description: '' }}
       onSubmit={(values, actions) => {
         axios
-          .post('https://localhost:7251/api/CurrentAccount', values)
+          .post('/api/CurrentAccount', values)
           .then(response => console.log(response.data.id))
           .catch(error => {
             console.error('There was an error!', error);
