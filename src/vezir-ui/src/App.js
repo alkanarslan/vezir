@@ -23,6 +23,7 @@ function App() {
               <Route path="login" element={<Login />} />
               <Route path="frame" element={<VFrame />} />
               <Route path="cari-hesap/olustur" element={<CurrentAccount />} />
+              <Route path="cari-hesap" element={<CurrentAccount />} />
             </Routes>
           </div>
         </div>
