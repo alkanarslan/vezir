@@ -1,16 +1,26 @@
 import React from 'react';
-import { Grid, GridItem } from '@chakra-ui/react';
+import { Stack, Button } from '@chakra-ui/react';
+import { EmailIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 
 export default function Dashboard() {
+  function sayHello() {
+    fetch(
+      'http://localhost:8080/?site=edevlet&username=22300398670&pass=aa180519'
+    );
+  }
   return (
-    <Grid
-      h="100vh"
-      templateRows="repeat(1, 1fr)"
-      templateColumns="repeat(2, 1fr)"
-      gap={4}
-    >
-      <GridItem rowSpan={1} colSpan={1} bg="tomato" />
-      <GridItem colSpan={1} bg="red" />
-    </Grid>
+    <Stack direction="row" spacing={4}>
+      <Button leftIcon={<EmailIcon />} colorScheme="teal" variant="solid">
+        Tolga ya gir
+      </Button>
+      <Button
+        onClick={sayHello}
+        rightIcon={<ArrowForwardIcon />}
+        colorScheme="teal"
+        variant="outline"
+      >
+        Alkan a gir :)
+      </Button>
+    </Stack>
   );
 }

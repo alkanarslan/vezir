@@ -26,26 +26,11 @@ client.on("authenticated", (session) => {
   });
 });
 client.on("ready", () => {
-  const media = MessageMedia.fromFilePath(
-    "/Users/alkanarslan/Desktop/Fender-Telecaster-Neck.pdf"
-  );
-  client.sendMessage("905542702497@c.us", media, {
-    caption: "this is my caption",
-  });
-  client.sendMessage("905542702497@c.us", "pong");
-  client.sendMessage("905542702497@c.us", "canım");
   console.log("Client is ready!");
 });
 client.on("message", (message) => {
   console.log(message.from);
 
-  const media = MessageMedia.fromFilePath(
-    "/Users/alkanarslan/Desktop/Fender-Telecaster-Neck.pdf"
-  );
-  client.sendMessage("905542702497@c.us", media, {
-    caption: "this is my caption",
-  });
-  client.sendMessage("905542702497@c.us", "pong");
   console.log(message.body);
 });
 

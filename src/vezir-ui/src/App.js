@@ -17,7 +17,7 @@ function App() {
           <Sidebar></Sidebar>
           <div className="otherpage">
             <Routes>
-              <Route path="/"></Route>
+              <Route path="/" element={<Dashboard />}></Route>
               <Route path="invoices/:invoiceId" element={<Invoice />} />
               <Route path="expenses" element={<Dashboard />} />
               <Route path="login" element={<Login />} />
