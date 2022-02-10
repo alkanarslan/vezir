@@ -1,12 +1,11 @@
 import React from 'react';
-import { Stack, Button } from '@chakra-ui/react';
+import { Stack, Button, useToast } from '@chakra-ui/react';
 import { EmailIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 
 export default function Dashboard() {
-  function sayHello() {
-    fetch(
-      'http://localhost:8080/?site=edevlet&username=22300398670&pass=aa180519'
-    );
+  const toast = useToast();
+  function yallah() {
+    fetch('http://localhost:8080/?site=edevlet&username=14402775&pass=202020');
   }
   return (
     <Stack direction="row" spacing={4}>
@@ -14,7 +13,7 @@ export default function Dashboard() {
         Tolga ya gir
       </Button>
       <Button
-        onClick={sayHello}
+        onClick={yallah}
         rightIcon={<ArrowForwardIcon />}
         colorScheme="teal"
         variant="outline"
