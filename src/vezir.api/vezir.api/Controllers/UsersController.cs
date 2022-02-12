@@ -105,7 +105,7 @@ public class UsersController : BaseApiController
     [Route("logout")]
     public async Task<IActionResult> Logout()
     {
-        var logout = await _userService.LogoutAsync(UserID);
+        var logout = await _userService.LogoutAsync(UserId);
 
         if (!logout.Success)
         {

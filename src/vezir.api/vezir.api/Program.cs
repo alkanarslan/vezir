@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using vezir.api;
+using vezir.api.GenericRepository;
 using vezir.api.Helper;
 using vezir.api.Interface;
+using vezir.api.Repository;
 using vezir.api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,10 +43,13 @@ builder.Services.AddCors(options =>
             
         });
 });
+builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ITaskService, TaskService>();
 builder.Services.AddTransient<ICurrentAccount, CurrentAccountService>();
+builder.Services.AddTransient<ILookupRepository, LookupRepository>();
+
 builder.Services.AddAuthorization();
 var app = builder.Build();
 

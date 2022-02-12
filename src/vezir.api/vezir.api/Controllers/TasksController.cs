@@ -23,7 +23,7 @@ public class TasksController : BaseApiController
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var getTasksResponse = await _taskService.GetTasks(UserID);
+        var getTasksResponse = await _taskService.GetTasks(UserId);
 
         if (!getTasksResponse.Success)
         {
@@ -38,7 +38,7 @@ public class TasksController : BaseApiController
     [HttpPost]
     public async Task<IActionResult> Post(TaskRequest taskRequest)
     {
-        var task = new Task { IsCompleted = taskRequest.IsCompleted, Ts = taskRequest.Ts, Name = taskRequest.Name, UserId = UserID };
+        var task = new Task { IsCompleted = taskRequest.IsCompleted, Ts = taskRequest.Ts, Name = taskRequest.Name, UserId = UserId };
 
         var saveTaskResponse = await _taskService.SaveTask(task);
 
@@ -55,7 +55,7 @@ public class TasksController : BaseApiController
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var deleteTaskResponse = await _taskService.DeleteTask(id, UserID);
+        var deleteTaskResponse = await _taskService.DeleteTask(id, UserId);
         if (!deleteTaskResponse.Success)
         {
             return UnprocessableEntity(deleteTaskResponse);

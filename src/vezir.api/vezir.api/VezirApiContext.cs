@@ -7,22 +7,15 @@ namespace vezir.api;
 
 
 
- public partial class VezirApiContext : DbContext
+ public class VezirApiContext : DbContext
     {
-        public VezirApiContext()
-        {
-        }
-
-        public VezirApiContext(DbContextOptions<VezirApiContext> options)
-            : base(options)
-        {
-        }
-
+       
+        public VezirApiContext(DbContextOptions options) :base(options) {}
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
         public virtual DbSet<Task> Tasks { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<CurrentAccount> CurrentAccount { get; set; }
-
+        public virtual DbSet<Lookup> Lookup { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RefreshToken>(entity =>
@@ -101,8 +94,8 @@ namespace vezir.api;
 
             });
 
-            OnModelCreatingPartial(modelBuilder);
+       
         }
 
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+       
     }
