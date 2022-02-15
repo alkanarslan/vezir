@@ -5,8 +5,8 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 public class TokenHelper
 {
-    public const string Issuer = "http://codingsonata.com";
-    public const string Audience = "http://codingsonata.com";
+    public const string Issuer = "https://www.kodpoint.com";
+    public const string Audience = "https://www.kodpoint.com";
     public const string Secret = "p0GXO6VuVZLRPef0tyO9jCqK4uZufDa6LP4n8Gj+8hQPB30f94pFiECAnPeMi5N6VT3/uscoGH7+zJrv4AuuPg==";
     public static async Task<string> GenerateAccessToken(int userId)
     {

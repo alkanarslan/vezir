@@ -16,7 +16,7 @@ import routes from "./routes";
  * with the Router instance.
  */
 
-export default route(function (/* { store, ssrContext } */) {
+export default route(function ({ store /*, ssrContext */ }) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
     : process.env.VUE_ROUTER_MODE === "history"
@@ -34,6 +34,13 @@ export default route(function (/* { store, ssrContext } */) {
       process.env.MODE === "ssr" ? void 0 : process.env.VUE_ROUTER_BASE
     ),
   });
+  Router.beforeEach((to, from, next) => {
+    console.log("before :" + store.getters["auth/isAuthenticated"]);
+    console.log(to.matched);
 
+    if (to.name !== "Login" && !store.getters["auth/isAuthenticated"])
+      next({ name: "Login" });
+    else next();
+  });
   return Router;
 });

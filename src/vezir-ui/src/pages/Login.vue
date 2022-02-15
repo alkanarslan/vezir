@@ -1,7 +1,7 @@
 <template>
-  <img src="~assets/vezir-bg.jpeg" class="wave" />
+  <img src="~assets/back.png" class="wave" />
 
-  <div class="row fixed-center" style="left: 31%">
+  <div class="row fixed-center">
     <div>
       <img src="~assets/vezir-logo.svg" />
       <q-form class="q-gutter-md" @submit.prevent="submitForm">
@@ -14,11 +14,12 @@
           dark
         />
         <q-btn
-          style="background: #04c35c; color: white; width: 352px"
+          style="background: #04c35c; color: white; width: 352px; height: 48px"
           size="md-lg"
-          label="Giriş"
+          label="GİRİŞ"
           class="center"
           type="submit"
+          dark
         />
       </q-form>
     </div>
@@ -27,25 +28,27 @@
 
 <script>
 import { useQuasar } from "quasar";
+import { mapActions } from "vuex";
 let $q;
 export default {
   name: "Login",
   data() {
     return {
       login: {
-        username: "",
-        password: "",
+        username: "alkanarslan@gmail.com",
+        password: "Pass@Pass",
       },
     };
   },
   methods: {
-    submitForm() {
-      if (!this.login.username || !this.login.password) {
-        $q.notify({
-          type: "negative",
-          message: 'This is a "negative" type notification.',
-        });
-      }
+    ...mapActions("auth", ["doLogin"]),
+    async submitForm() {
+      await this.doLogin(this.login);
+      this.$router.push("/");
+      $q.notify({
+        type: "negative",
+        message: 'This is a "negative" type notification.',
+      });
     },
   },
   mounted() {

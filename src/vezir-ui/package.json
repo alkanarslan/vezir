@@ -2,10 +2,13 @@
   "name": "vezir",
   "version": "0.0.1",
   "description": "vezir muhasebe",
-  "productName": "vezir",
+  "productName": "Vezir - Muhasebe Büro Yönetim Sistemi",
   "author": "Alkan ARSLAN Kodpoint",
   "private": true,
   "scripts": {
+    "dev": "quasar dev",
+    "build": "quasar build",
+    "build:pwa": "quasar build -m pwa",
     "lint": "eslint --ext .js,.vue ./",
     "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0"
@@ -16,8 +19,9 @@
     "core-js": "^3.6.5",
     "quasar": "^2.0.0",
     "vue": "^3.0.0",
+    "vue-i18n": "^9.2.0-beta.30",
     "vue-router": "^4.0.0",
-    "vuex": "^4.0.1"
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
