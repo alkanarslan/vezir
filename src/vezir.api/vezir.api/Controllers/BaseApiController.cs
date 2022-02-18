@@ -8,7 +8,7 @@ public class BaseApiController : ControllerBase
     private string FindClaim(string claimName)
     {
         var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
-        var claim = claimsIdentity.FindFirst(claimName);
+        var claim = claimsIdentity?.FindFirst(claimName);
  
         if (claim == null)
         {

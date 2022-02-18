@@ -1,5 +1,5 @@
 export function getMe(state) {
-  return state.me;
+  return state;
 }
 export function getToken(state) {
   return state.token;

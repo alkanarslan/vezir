@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using vezir.api.Helper;
 using vezir.api.Interface;
@@ -19,12 +20,12 @@ public class TokenService : ITokenService
 
     public async Task<Tuple<string, string>> GenerateTokensAsync(int userId)
     {
-        var accessToken = await TokenHelper.GenerateAccessToken(userId);
+   
         var refreshToken = await TokenHelper.GenerateRefreshToken();
 
         var userRecord = await _vezirApiContext.Users.Include(o => o.RefreshTokens)
             .FirstOrDefaultAsync(e => e.Id == userId);
-
+        var accessToken = await TokenHelper.GenerateAccessToken(userId,userRecord.FirstName + " " +userRecord.LastName,userRecord.Email);
         if (userRecord == null)
         {
             return null;

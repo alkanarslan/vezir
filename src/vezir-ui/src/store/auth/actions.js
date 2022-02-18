@@ -1,15 +1,14 @@
 import { api } from "boot/axios";
 
 export const doLogin = async ({ commit }, payload) => {
-  console.log(payload);
   try {
-    console.log(payload);
     const response = await api.post("/api/Users/login", {
       email: payload.username,
       password: payload.password,
     });
     console.log(response);
     commit("setToken", response.data);
+    commit("setMe", response.data);
     api.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${response.data.accessToken}`;
@@ -24,9 +23,7 @@ export const signOut = ({ commit }) => {
 };
 
 export const getMe = async ({ commit }, token) => {
-  await api.get("/api/v1/users/me/", token.access).then((response) => {
-    commit("setMe", response.data);
-  });
+  console.log("action getMe");
 };
 
 export const init = async ({ commit, dispatch }) => {

@@ -52,7 +52,9 @@ public class UserService : IUserService
         {
             Success = true,
             AccessToken = token.Item1,
-            RefreshToken = token.Item2
+            RefreshToken = token.Item2,
+            Name = user.FirstName + " " + user.LastName,
+            Email = user.Email
         };
     }
 
