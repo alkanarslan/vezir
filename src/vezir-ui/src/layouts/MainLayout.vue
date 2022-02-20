@@ -26,7 +26,7 @@
             outlined
             square
             v-model="search"
-            placeholder="Search"
+            placeholder="Mükellef Ara"
             class="bg-white col"
           />
           <q-btn
@@ -206,8 +206,8 @@ export default {
       toggleLeftDrawer,
 
       links1: [
-        { icon: "home", text: "Home" },
-        { icon: "whatshot", text: "Home" },
+        { icon: "home", text: "Mükellef Kartları" },
+        { icon: "whatshot", text: "Mükellef Kartları" },
         { icon: "subscriptions", text: "Home" },
       ],
       links2: [

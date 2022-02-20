@@ -4,18 +4,15 @@ using Task = vezir.api.Model.Task;
 
 
 namespace vezir.api;
-
-
-
- public class VezirApiContext : DbContext
+public class VezirApiContext : DbContext
     {
-       
         public VezirApiContext(DbContextOptions options) :base(options) {}
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
         public virtual DbSet<Task> Tasks { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<CurrentAccount> CurrentAccount { get; set; }
         public virtual DbSet<Lookup> Lookup { get; set; }
+        public virtual DbSet<Declarations> Declarations { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RefreshToken>(entity =>

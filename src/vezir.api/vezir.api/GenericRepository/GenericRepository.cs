@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using vezir.api.Helper;
 
 namespace vezir.api.GenericRepository;
 
@@ -22,6 +23,18 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         return Context.Set<T>().Where(expression);
     }
+
+    public Task<int> GetCountAsync()
+    {
+        return Context.Set<T>().CountAsync();
+    }
+
+    public Task<List<T>> ToFilterListAsync(PaginationFilter paginationFilter)
+    {
+        var skip = (paginationFilter.PageNumber - 1) * paginationFilter.PageSize;
+        return Context.Set<T>().Skip(skip).Take(paginationFilter.PageSize).ToListAsync();
+    }
+
     public IEnumerable<T> GetAll()
     {
         return Context.Set<T>().ToList();
@@ -30,6 +43,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         return Context.Set<T>().Find(id);
     }
+
     public void Remove(T entity)
     {
         Context.Set<T>().Remove(entity);

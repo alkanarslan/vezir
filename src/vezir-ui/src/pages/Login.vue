@@ -47,7 +47,7 @@ export default {
       this.$router.push("/");
       $q.notify({
         type: "negative",
-        message: 'This is a "negative" type notification.',
+        message: "Problem yok kefine bak...",
       });
     },
   },
