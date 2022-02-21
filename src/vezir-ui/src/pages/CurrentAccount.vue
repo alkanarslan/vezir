@@ -18,7 +18,7 @@
         lazy-rules
         :rules="[(val) => (val && val.length > 0) || 'Gerekli Alan...']"
       />
-
+      <q-badge color="secondary" multi-line> Model: "{{ model }}" </q-badge>
       <q-select
         filled
         v-model="model"
@@ -30,13 +30,19 @@
         :options="options"
         option-value="id"
         option-label="name"
-        emit-value
         @filter="filterFn"
         hint="Vergi dairesini seçiniz."
+        lazy-rules
+        emit-value
+        map-options
+        clearable
+        :rules="[(val) => !!val || 'Vergi dairesini seçiniz.']"
       >
         <template v-slot:no-option>
           <q-item>
-            <q-item-section class="text-grey"> No results </q-item-section>
+            <q-item-section class="text-grey">
+              Sonuç Bulunamadı
+            </q-item-section>
           </q-item>
         </template>
       </q-select>
@@ -53,20 +59,20 @@ import { useQuasar } from "quasar";
 import { ref } from "vue";
 import { api } from "boot/axios";
 
-const stringOptions = [];
+const taxOfficeOptions = [];
 export default {
   setup() {
     const $q = useQuasar();
     const firmName = ref(null);
     const firmDescription = ref(null);
-    const options = ref(stringOptions);
+    const model = ref(null);
+    const options = ref(taxOfficeOptions);
 
     const fetchData = (page = 1) => {
       api
         .get("/api/TaxOffice")
         .then((res) => {
-          // optionsvez.value = res.data;
-          stringOptions.push(...res.data);
+          taxOfficeOptions.push(...res.data);
         })
         .finally(() => {})
         .catch((err) => {
@@ -75,8 +81,7 @@ export default {
             message: err.message,
             position: "center",
           });
-          // loading.value = true;
-          console.log(err);
+          // console.log(err);
         });
     };
 
@@ -85,12 +90,12 @@ export default {
     return {
       firmName,
       firmDescription,
-      model: ref(null),
+      model,
       options,
       filterFn(name, update, abort) {
         update(() => {
           const needle = name.toLowerCase();
-          options.value = stringOptions.filter(
+          options.value = taxOfficeOptions.filter(
             (v) => v.name.toLowerCase().indexOf(needle) > -1
           );
         });
@@ -102,7 +107,7 @@ export default {
             textColor: "white",
             icon: "warning",
             message:
-              "You need to accept the license and terms first" + firmName.value,
+              "You need to accept the license and terms first" + model.value,
           });
         } else {
           $q.notify({
