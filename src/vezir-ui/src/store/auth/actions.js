@@ -6,15 +6,13 @@ export const doLogin = async ({ commit }, payload) => {
       email: payload.username,
       password: payload.password,
     });
-    console.log(response);
+
     commit("setToken", response.data);
     commit("setMe", response.data);
     api.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${response.data.accessToken}`;
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };
 
 export const signOut = ({ commit }) => {
@@ -22,9 +20,7 @@ export const signOut = ({ commit }) => {
   commit("removeToken");
 };
 
-export const getMe = async ({ commit }, token) => {
-  console.log("action getMe");
-};
+export const getMe = async ({ commit }, token) => {};
 
 export const init = async ({ commit, dispatch }) => {
   const token = localStorage.getItem("token");

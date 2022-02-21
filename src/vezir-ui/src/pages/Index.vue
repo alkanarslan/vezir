@@ -1,24 +1,21 @@
 <template>
   <div class="q-pa-md">
     <q-table
+      color="secondary"
       title="Beyannameler"
-      :rows="data"
+      :rows="restdata"
       :columns="columns"
       row-key="id"
       :loading="loading"
+      v-model:pagination="pagination"
+      @request="onRequest"
       binary-state-sort
     >
       <template #loading>
         <q-inner-loading showing color="primary" />
       </template>
       <template v-slot:top-right>
-        <q-input
-          borderless
-          dense
-          debounce="300"
-          v-model="filter"
-          placeholder="Ara"
-        >
+        <q-input borderless dense debounce="300" placeholder="Ara">
           <template v-slot:append>
             <q-icon name="search" />
           </template>
@@ -30,28 +27,51 @@
 
 <script>
 import { api } from "boot/axios";
+import { defineComponent, ref } from "vue";
 
-export default {
-  data() {
+export default defineComponent({
+  setup() {
+    const loading = ref(true);
+    const restdata = ref([]);
+    const pagination = ref({
+      page: 1,
+      rowsPerPage: 10,
+      rowsNumber: 0,
+    });
+    const columns = [
+      { name: "id", label: "ID", field: "id" },
+      { name: "name", label: "Açıklama", align: "left", field: "name" },
+      { name: "code", label: "Kod", field: "code" },
+    ];
+
+    const fetchData = (page = 1) => {
+      console.log(page);
+      api
+        .get("/api/Declarations", {
+          params: { pageNumber: page },
+        })
+        .then((res) => {
+          restdata.value = res.data.data;
+          pagination.value.page = res.data.pageNumber;
+          pagination.value.rowsPerPage = res.data.pageSize;
+          pagination.value.rowsNumber = res.data.totalRecords;
+        })
+        .finally(() => {
+          loading.value = false;
+        });
+    };
+
+    function onRequest(props) {
+      fetchData(props.pagination.page);
+    }
+    fetchData();
     return {
-      data: [],
-      columns: [
-        { name: "id", label: "id", field: "id" },
-        { name: "name", label: "name", align: "left", field: "name" },
-        { name: "code", label: "code", field: "code" },
-      ],
+      onRequest,
+      loading,
+      restdata,
+      columns,
+      pagination,
     };
   },
-  methods: {
-    getAll() {
-      api.get("/api/Declarations").then((res) => {
-        console.log(res.data.data);
-        this.data = res.data.data;
-      });
-    },
-  },
-  mounted() {
-    this.getAll();
-  },
-};
+});
 </script>
