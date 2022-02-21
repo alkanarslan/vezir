@@ -95,7 +95,7 @@
       <q-scroll-area class="fit">
         <q-list padding>
           <q-item
-            to="login"
+            :to="link.path"
             v-for="link in links1"
             :key="link.text"
             v-ripple
@@ -206,7 +206,7 @@ export default {
       toggleLeftDrawer,
 
       links1: [
-        { icon: "home", text: "Mükellef Kartları" },
+        { icon: "home", text: "Mükellef Kartları", path: "/CariHesaplar" },
         { icon: "whatshot", text: "Mükellef Kartları" },
         { icon: "subscriptions", text: "Home" },
       ],

@@ -13,6 +13,7 @@ public class VezirApiContext : DbContext
         public virtual DbSet<CurrentAccount> CurrentAccount { get; set; }
         public virtual DbSet<Lookup> Lookup { get; set; }
         public virtual DbSet<Declarations> Declarations { get; set; }
+        public virtual DbSet<TaxOffice> TaxOffice  { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RefreshToken>(entity =>

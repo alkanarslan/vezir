@@ -28,6 +28,8 @@
 <script>
 import { api } from "boot/axios";
 import { defineComponent, ref } from "vue";
+import { useQuasar } from "quasar";
+let $q;
 
 export default defineComponent({
   setup() {
@@ -45,7 +47,6 @@ export default defineComponent({
     ];
 
     const fetchData = (page = 1) => {
-      console.log(page);
       api
         .get("/api/Declarations", {
           params: { pageNumber: page },
@@ -58,6 +59,15 @@ export default defineComponent({
         })
         .finally(() => {
           loading.value = false;
+        })
+        .catch((err) => {
+          $q.notify({
+            type: "negative",
+            message: err.message,
+            position: "center",
+          });
+          // loading.value = true;
+          console.log(err);
         });
     };
 
@@ -65,6 +75,9 @@ export default defineComponent({
       fetchData(props.pagination.page);
     }
     fetchData();
+
+    $q = useQuasar();
+
     return {
       onRequest,
       loading,

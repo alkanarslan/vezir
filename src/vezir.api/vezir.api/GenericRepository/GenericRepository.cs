@@ -23,6 +23,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         return Context.Set<T>().Where(expression);
     }
+    
+    public Task<List<T>> FindAsync(Expression<Func<T, bool>> expression)
+    {
+        return Context.Set<T>().Where(expression).ToListAsync();
+    }
 
     public Task<int> GetCountAsync()
     {

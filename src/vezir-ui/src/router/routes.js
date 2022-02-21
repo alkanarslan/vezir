@@ -8,6 +8,10 @@ const routes = [
         path: "/",
         component: () => import("pages/Index.vue"),
       },
+      {
+        path: "/CariHesaplar",
+        component: () => import("pages/CurrentAccount.vue"),
+      },
     ],
   },
 

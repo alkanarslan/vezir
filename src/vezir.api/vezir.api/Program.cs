@@ -57,6 +57,7 @@ builder.Services.AddTransient<ITaskService, TaskService>();
 builder.Services.AddTransient<ICurrentAccount, CurrentAccountService>();
 builder.Services.AddTransient<ILookupRepository, LookupRepository>();
 builder.Services.AddTransient<IDeclarationsService, DeclarationsRepository>();
+builder.Services.AddTransient<ITaxOfficeRepository, TaxOfficeRepository>();
 builder.Services.AddAuthorization();
 var app = builder.Build();
 
