@@ -12,6 +12,10 @@ const routes = [
         path: "/CariHesaplar",
         component: () => import("pages/CurrentAccount.vue"),
       },
+      {
+        path: "/FileUpload",
+        component: () => import("pages/FileUpload.vue"),
+      },
     ],
   },
 

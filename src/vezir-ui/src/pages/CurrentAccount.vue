@@ -1,57 +1,105 @@
 <template>
-  <div class="q-pa-md" style="max-width: 400px">
-    <q-form @submit="onSubmit" class="q-gutter-md">
-      <q-input
-        filled
-        v-model="firmName"
-        label="Firma Adı *"
-        hint="Firma adını giriniz."
-        lazy-rules
-        :rules="[(val) => (val && val.length > 0) || 'Gerekli Alan...']"
-      />
+  <q-card style="margin: 30px" align:stretch>
+    <q-card-section>
+      <div class="q-pa-md">
+        <q-card-section>
+          <div class="text-h4">Mükellef Kayıt</div>
+        </q-card-section>
 
-      <q-input
-        filled
-        v-model="firmDescription"
-        label="Firma Ünvanı *"
-        hint="Firma ünvanını giriniz."
-        lazy-rules
-        :rules="[(val) => (val && val.length > 0) || 'Gerekli Alan...']"
-      />
-      <q-badge color="secondary" multi-line> Model: "{{ model }}" </q-badge>
-      <q-select
-        filled
-        v-model="model"
-        use-input
-        hide-selected
-        fill-input
-        label="Vergi Dairesi *"
-        input-debounce="0"
-        :options="options"
-        option-value="id"
-        option-label="name"
-        @filter="filterFn"
-        hint="Vergi dairesini seçiniz."
-        lazy-rules
-        emit-value
-        map-options
-        clearable
-        :rules="[(val) => !!val || 'Vergi dairesini seçiniz.']"
-      >
-        <template v-slot:no-option>
-          <q-item>
-            <q-item-section class="text-grey">
-              Sonuç Bulunamadı
-            </q-item-section>
-          </q-item>
-        </template>
-      </q-select>
+        <q-separator inset />
 
-      <div>
-        <q-btn label="Kaydet" type="submit" color="primary" />
+        <q-card-section>
+          <q-form @submit="onSubmit" class="q-gutter-md">
+            <q-input
+              filled
+              v-model="firmName"
+              label="Firma Adı *"
+              hint="Firma adını giriniz."
+              lazy-rules
+              :rules="[(val) => (val && val.length > 0) || 'Gerekli Alan...']"
+            />
+
+            <q-input
+              filled
+              v-model="firmDescription"
+              label="Firma Ünvanı *"
+              hint="Firma ünvanını giriniz."
+              lazy-rules
+              :rules="[(val) => (val && val.length > 0) || 'Gerekli Alan...']"
+            />
+
+            <q-select
+              filled
+              v-model="taxOffice"
+              use-input
+              hide-selected
+              fill-input
+              label="Vergi Dairesi *"
+              input-debounce="0"
+              :options="options"
+              option-value="id"
+              option-label="name"
+              @filter="filterFn"
+              hint="Vergi dairesini seçiniz."
+              lazy-rules
+              emit-value
+              map-options
+              clearable
+              :rules="[(val) => !!val || 'Vergi dairesini seçiniz.']"
+            >
+              <template v-slot:no-option>
+                <q-item>
+                  <q-item-section class="text-grey">
+                    Sonuç Bulunamadı
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+            <q-input
+              filled
+              v-model="vkntckn"
+              label="VKN - TCKN"
+              mask="###########"
+              hint="VKN veya TCKN giriniz."
+              lazy-rules
+              :rules="[(val) => (val && val.length > 0) || 'Gerekli Alan...']"
+            />
+
+            <q-input filled v-model="firmCreateDate">
+              <template v-slot:append>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy
+                    ref="qDateProxy"
+                    cover
+                    transition-show="scale"
+                    transition-hide="scale"
+                  >
+                    <q-date
+                      v-model="firmCreateDate"
+                      mask="DD/MM/YYYY"
+                      today-btn
+                    >
+                      <div class="row items-center justify-end">
+                        <q-btn
+                          v-close-popup
+                          label="Close"
+                          color="primary"
+                          flat
+                        />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+            <div>
+              <q-btn label="Kaydet" type="submit" color="primary" size="md" />
+            </div>
+          </q-form>
+        </q-card-section>
       </div>
-    </q-form>
-  </div>
+    </q-card-section>
+  </q-card>
 </template>
 
 <script>
@@ -65,8 +113,10 @@ export default {
     const $q = useQuasar();
     const firmName = ref(null);
     const firmDescription = ref(null);
-    const model = ref(null);
+    const taxOffice = ref(null);
+    const vkntckn = ref(null);
     const options = ref(taxOfficeOptions);
+    const firmCreateDate = ref(null);
 
     const fetchData = (page = 1) => {
       api
@@ -90,8 +140,10 @@ export default {
     return {
       firmName,
       firmDescription,
-      model,
+      taxOffice,
+      vkntckn,
       options,
+      firmCreateDate,
       filterFn(name, update, abort) {
         update(() => {
           const needle = name.toLowerCase();
@@ -107,7 +159,8 @@ export default {
             textColor: "white",
             icon: "warning",
             message:
-              "You need to accept the license and terms first" + model.value,
+              "You need to accept the license and terms first" +
+              taxOffice.value,
           });
         } else {
           $q.notify({
