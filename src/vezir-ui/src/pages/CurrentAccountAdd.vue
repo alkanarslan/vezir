@@ -27,7 +27,22 @@
               lazy-rules
               :rules="[(val) => (val && val.length > 0) || 'Gerekli Alan...']"
             />
-
+            <q-input
+              filled
+              v-model="firmName"
+              label="Mükellefiyet Türü *"
+              hint="Firma adını giriniz."
+              lazy-rules
+              :rules="[(val) => (val && val.length > 0) || 'Gerekli Alan...']"
+            />
+            <q-input
+              filled
+              v-model="firmName"
+              label="Firma Türü *"
+              hint="Firma adını giriniz."
+              lazy-rules
+              :rules="[(val) => (val && val.length > 0) || 'Gerekli Alan...']"
+            />
             <q-select
               filled
               v-model="taxOffice"

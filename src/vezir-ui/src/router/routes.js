@@ -9,8 +9,12 @@ const routes = [
         component: () => import("pages/Index.vue"),
       },
       {
-        path: "/CariHesaplar",
+        path: "/cari-hesaplar/:id",
         component: () => import("pages/CurrentAccount.vue"),
+      },
+      {
+        path: "/cari-hesaplar/ekle",
+        component: () => import("pages/CurrentAccountAdd.vue"),
       },
       {
         path: "/FileUpload",
