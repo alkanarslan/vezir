@@ -14,6 +14,16 @@ app.get("/", async (req, res) => {
   let site = req.query.site;
   let username = req.query.username;
   let pass = req.query.pass;
+
+  switch (site) {
+    case "edevlet":
+      
+      break;
+  
+    default:
+      break;
+  }
+
   console.log(site, username, pass);
   //await newFunction(username, pass);
   internetVergiDairesi(username, pass);
