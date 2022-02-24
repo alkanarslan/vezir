@@ -1,5 +1,6 @@
 const puppeteer = require("puppeteer");
-
+const htmlparser2 = require("htmlparser2");
+const cheerio = require("cheerio");
 (async () => {
   const browser = await puppeteer.launch({
     headless: false,
@@ -42,13 +43,63 @@ const puppeteer = require("puppeteer");
 
   console.log(page.url());
   console.log(typeof page.url());
-  await newPage.waitForTimeout(1000);
+  await newPage.waitForTimeout(2000);
   await newPage.$eval("#sorgulaButon", (form) => form.click());
   await newPage.waitForTimeout(2000);
 
-  await newPage.$eval("#bynPDF0zkztsqt7u1wfi>img", (form) => form.click());
+  //await newPage.$eval("#sbynPDF0zkztsqt7u1wfi>img", (form) => form.click());
   console.log(newPage.url());
-  console.log(typeof newPage.url());
+
+  const data = await newPage.evaluate(() => {
+    const eTable = document.querySelectorAll(
+      "#bynList0_content>form>center:nth-child(2)>table:nth-child(2)"
+    );
+    const tds = Array.from(eTable);
+    return tds.map((item) => item.innerHTML);
+  });
+  const scrapedData = [];
+  const dom = htmlparser2.parseDocument(data);
+  const $ = cheerio.load(dom);
+  $("tr").each((index, element) => {
+    if (index === 0) return true;
+    const tds = $(element).find("td");
+    const firmName = $(tds[3]).attr("title");
+    const pdfId = $(tds[0]).attr("id").replace("checkboxTD", "").trim();
+    const tarih = $(tds[7]).text().trim();
+    const beyannmeTipi = $(tds[1]).text().trim();
+    const vdNo = $(tds[2]).text().trim();
+    const onay = $(tds[8]).text().trim();
+
+    if (tarih.length > 0) {
+      const tableRow = { pdfId, firmName, tarih, beyannmeTipi, vdNo, onay };
+      scrapedData.push(tableRow);
+    }
+  });
+  console.log(scrapedData);
+
+  // const author = await page.$eval(
+  //   "#bynList0_content>form>center:nth-child(2)>table:nth-child(2)",
+  //   (el) => el.innerText
+  // );
+
+  // console.log(author);
+  // await tableParser(newPage, {
+  //   selector: "#bynList0_content>form>center:nth-child(2)>table:nth-child(2)",
+  //   allowedColNames: {
+  //     "Beyanname Türü": "car",
+  //     "TC Kimlik Numarası / Vergi Kimlik Numarası": "hp",
+  //     "Ad Soyad/Unvan(*)": "year",
+  //   },
+  // });
+
+  // download urllerini çağıracak
+  // await page.goto(
+  //   "https://ebeyanname.gib.gov.tr/dispatch?cmd=IMAJ&subcmd=BEYANNAMEGORUNTULE&TOKEN=c444d8763b5e000a4e84699fee9c42c091d4ee350c05fb8f7fa1970f0f160def38bcd44e9ff63959607cfa5930831a6289edd91447ac280e8ab44efaadfd4f4c&beyannameOid=0zkztsqt7u1wfi&inline=true"
+  // );
+  // await page._client.send("Page.setDownloadBehavior", {
+  //   behavior: "allow",
+  //   downloadPath: "/tmp",
+  // });
 
   /*
 
