@@ -70,8 +70,36 @@ const cheerio = require("cheerio");
     const vdNo = $(tds[2]).text().trim();
     const onay = $(tds[8]).text().trim();
 
+    tahakkukId = "yok";
+
+    $(element)
+      .find("img")
+      .each((index, element) => {
+        const bakbi = $(element).attr("title");
+        if (bakbi != undefined) {
+          if (bakbi.includes("Tahakkuku")) {
+            tahakkukId = $(element)
+              .attr("onclick")
+              .replace("',false,false)", "")
+              .replace("tahakkukGoruntule('", "")
+              .replace(pdfId, "")
+              .replace("'", "")
+              .replace(",'", "")
+              .trim();
+          }
+        }
+      });
+
     if (tarih.length > 0) {
-      const tableRow = { pdfId, firmName, tarih, beyannmeTipi, vdNo, onay };
+      const tableRow = {
+        pdfId,
+        firmName,
+        tarih,
+        beyannmeTipi,
+        vdNo,
+        onay,
+        tahakkukId,
+      };
       scrapedData.push(tableRow);
     }
   });
@@ -150,3 +178,8 @@ https://ebeyanname.gib.gov.tr/dispatch?cmd=IMAJ&subcmd=BEYANNAMEGORUNTULE&TOKEN=
 //document.querySelector("#page > table > tbody > tr > td > div:nth-child(6) > div > table > tbody > tr > td:nth-child(7) > span")
 
 //document.querySelector("#page > table > tbody > tr > td > div:nth-child(6) > div > table > tbody > tr > td:nth-child(7) > span")
+
+// /html/body/div[1]/table[3]/tbody/tr/td[2]/div/form/center[1]/table[2]/tbody/tr[2]/td[10]/img
+// /html/body/div[1]/table[3]/tbody/tr/td[2]/div/form/center[1]/table[2]/tbody/tr[3]/td[10]/img
+// /html/body/div[1]/table[3]/tbody/tr/td[2]/div/form/center[1]/table[2]/tbody/tr[4]/td[10]/img
+// /html/body/div[1]/table[3]/tbody/tr/td[2]/div/form/center[1]/table[2]/tbody/tr[4]/td[10]/img

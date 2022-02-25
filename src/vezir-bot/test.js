@@ -52,8 +52,6 @@ const cheerio = require("cheerio");
               .trim();
           }
         }
-
-        //  console.log(typeof bakbi);
       });
     //const tahakkukId = $(tds[8]).find("td")[2].children[1].attribs.onclick;
 
@@ -71,6 +69,11 @@ const cheerio = require("cheerio");
     }
   });
   console.log(scrapedData);
+
+  await page.evaluate(() => {
+    test();
+  });
+
   // for (let row of CSSselect.selectAll("td", dom)) {
   //   console.log(`${row.attribs.id} - ${row.attribs.title}  - ${row.ele}`);
   // }
@@ -83,5 +86,5 @@ const cheerio = require("cheerio");
   //   console.log(data);s
   // Get the "viewport" of the page, as reported by the page.
 
-  await browser.close();
+  //await browser.close();
 })();
