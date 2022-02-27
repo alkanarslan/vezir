@@ -29,6 +29,7 @@
 import { api } from "boot/axios";
 import { defineComponent, ref } from "vue";
 import { useQuasar } from "quasar";
+import { HubConnectionBuilder } from "@microsoft/signalr";
 let $q;
 
 export default defineComponent({
@@ -77,6 +78,23 @@ export default defineComponent({
     fetchData();
 
     $q = useQuasar();
+    const connection = new HubConnectionBuilder()
+      .withUrl("http://localhost:5092/vezirhub")
+      .withAutomaticReconnect()
+      .build();
+
+    console.log("Conn" + connection);
+
+    connection.start();
+    connection.on("SendMessage", (data) => {
+      //fetchData(data);
+      $q.notify({
+        type: "negative",
+        message: "Al tarrak " + data,
+        position: "center",
+      });
+      console.log(data);
+    });
 
     return {
       onRequest,

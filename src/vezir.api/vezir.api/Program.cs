@@ -4,12 +4,13 @@ using Microsoft.IdentityModel.Tokens;
 using vezir.api;
 using vezir.api.GenericRepository;
 using vezir.api.Helper;
+using vezir.api.Hubs;
 using vezir.api.Interface;
 using vezir.api.Repository;
 using vezir.api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-var  vezirAllowSpecificOrigins = "_vezirAllowSpecificOrigins";
+
 // Add services to the container.
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IUriService>(o =>
@@ -23,6 +24,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSignalR();
 builder.Services.AddDbContext<VezirApiContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("VezirDbConnectionString")));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -42,12 +44,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
  
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: vezirAllowSpecificOrigins,
+    options.AddPolicy(name: "_vezirAllowSpecificOrigins",
         builder =>
         {
-            builder.WithOrigins("*").AllowAnyHeader()
-                .AllowAnyMethod();
-            
+            builder.SetIsOriginAllowed(_ => true).AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+
+
         });
 });
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
@@ -68,12 +70,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 
-app.UseCors(vezirAllowSpecificOrigins);
+//app.UseHttpsRedirection();
+
+app.UseCors("_vezirAllowSpecificOrigins");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapHub<DeclarationHub>("/vezirhub");
 app.Run();

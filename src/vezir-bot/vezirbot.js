@@ -1,6 +1,9 @@
 const puppeteer = require("puppeteer");
 const htmlparser2 = require("htmlparser2");
 const cheerio = require("cheerio");
+const path = require("path");
+const download = require("download");
+
 (async () => {
   const browser = await puppeteer.launch({
     headless: false,
@@ -48,7 +51,6 @@ const cheerio = require("cheerio");
   await newPage.waitForTimeout(2000);
 
   //await newPage.$eval("#sbynPDF0zkztsqt7u1wfi>img", (form) => form.click());
-  console.log(newPage.url());
 
   const data = await newPage.evaluate(() => {
     const eTable = document.querySelectorAll(
@@ -104,6 +106,21 @@ const cheerio = require("cheerio");
     }
   });
   console.log(scrapedData);
+
+  var Url = new URL(newPage.url());
+
+  var token = Url.searchParams.get("TOKEN");
+
+  var ikinciUrl = new URL(
+    "https://ebeyanname.gib.gov.tr/dispatch?cmd=IMAJ&subcmd=BEYANNAMEGORUNTULE&TOKEN=3705a6b168026b1c19ef38ba62c289a502f931971418a800aaebb2314a3f5171fab06ad44323d283864014f74b805248082dae7fc011bba92832dbcba33dd92e&beyannameOid=0zkztsqt7u1wfi&inline=true"
+  );
+
+  ikinciUrl.searchParams.delete("TOKEN");
+  ikinciUrl.searchParams.set("TOKEN", token);
+
+  (async () => {
+    await download(ikinciUrl.href, "./pdf");
+  })();
 
   // const author = await page.$eval(
   //   "#bynList0_content>form>center:nth-child(2)>table:nth-child(2)",

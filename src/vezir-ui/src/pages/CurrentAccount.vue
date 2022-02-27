@@ -62,13 +62,14 @@ import { ref } from "vue";
 import { api } from "boot/axios";
 import { useQuasar } from "quasar";
 import { useRoute } from "vue-router";
+import { HubConnectionBuilder } from "@microsoft/signalr";
 export default {
   setup() {
     const restdata = ref([]);
     const $q = useQuasar();
     const route = useRoute();
     const currentRouteID = route.params.id;
-
+    console.log("orororodfsfsfs");
     const fetchData = (id = 0) => {
       api
         .get("/api/CurrentAccount", {
@@ -85,6 +86,7 @@ export default {
             position: "center",
           });
           // loading.value = true;
+
           console.log(err);
         });
     };

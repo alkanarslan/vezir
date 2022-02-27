@@ -1,8 +1,12 @@
 {
   "dependencies": {
+    "@microsoft/signalr": "^6.0.2",
+    "amqplib": "^0.8.0",
     "cheerio": "^1.0.0-rc.10",
     "css-select": "^4.2.1",
+    "download": "^8.0.0",
     "htmlparser2": "^7.2.0",
+    "node-signalr": "^2.0.6",
     "pdf-parse": "^1.1.1",
     "puppeteer": "^13.4.0",
     "puppeteer-table-parser": "^1.4.0"

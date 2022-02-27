@@ -1,6 +1,9 @@
 const puppeteer = require("puppeteer");
 const htmlparser2 = require("htmlparser2");
 const cheerio = require("cheerio");
+const path = require("path");
+const download = require("download");
+
 (async () => {
   const browser = await puppeteer.launch({
     headless: false,
@@ -71,8 +74,13 @@ const cheerio = require("cheerio");
   console.log(scrapedData);
 
   await page.evaluate(() => {
-    test();
+    // test();
   });
+
+  // Download the file
+  (async () => {
+    await download("http://127.0.0.1/oku.pdf", "./pdf");
+  })();
 
   // for (let row of CSSselect.selectAll("td", dom)) {
   //   console.log(`${row.attribs.id} - ${row.attribs.title}  - ${row.ele}`);
