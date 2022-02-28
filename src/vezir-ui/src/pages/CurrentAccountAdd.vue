@@ -27,21 +27,34 @@
               lazy-rules
               :rules="[(val) => (val && val.length > 0) || 'Gerekli Alan...']"
             />
-            <q-input
+            <q-select
               filled
-              v-model="firmName"
+              v-model="LiableTypeValue"
+              :options="LiableTypeOption"
               label="Mükellefiyet Türü *"
-              hint="Firma adını giriniz."
-              lazy-rules
-              :rules="[(val) => (val && val.length > 0) || 'Gerekli Alan...']"
+              option-value="value"
+              option-label="label"
+              emit-value
+              map-options
+              clearable
+              :rules="[(val) => !!val || 'Mükellefiyet Türünü seçiniz.']"
+              hint="Mükellefiyet Türünü seçiniz."
+              @update:model-value="(val) => liableTypeSelected(val)"
             />
-            <q-input
+
+            <q-select
+              v-if="firmTypeVisible"
               filled
-              v-model="firmName"
+              v-model="firmTypeSelectedOptionsValue"
+              :options="firmTypeOptionsValue"
               label="Firma Türü *"
-              hint="Firma adını giriniz."
-              lazy-rules
-              :rules="[(val) => (val && val.length > 0) || 'Gerekli Alan...']"
+              option-value="lookupID"
+              option-label="name"
+              emit-value
+              map-options
+              clearable
+              :rules="[(val) => !!val || 'Firma Türünü seçiniz.']"
+              hint="Firma Türünü seçiniz."
             />
             <q-select
               filled
@@ -51,7 +64,7 @@
               fill-input
               label="Vergi Dairesi *"
               input-debounce="0"
-              :options="options"
+              :options="taxOfficeOptionsValue"
               option-value="id"
               option-label="name"
               @filter="filterFn"
@@ -124,22 +137,120 @@
 </template>
 
 <script>
-import { useQuasar, date } from "quasar";
+import { useQuasar } from "quasar";
 import { ref } from "vue";
 import { api } from "boot/axios";
 
-
 const taxOfficeOptions = [];
+const liableType = [
+  { label: "Gelir Vergisi", value: "11" },
+  { label: "Kurumlar Vergisi", value: "12" },
+  { label: "Hiçbiri", value: "13" },
+];
+const firmTypeOptions = [];
 export default {
   setup() {
     const $q = useQuasar();
     const firmName = ref(null);
     const firmDescription = ref(null);
     const taxOffice = ref(null);
+    const taxOfficeOptionsValue = ref(taxOfficeOptions);
+    const LiableTypeOption = ref(liableType);
+    const LiableTypeValue = ref(null);
     const vkntckn = ref(null);
-    const options = ref(taxOfficeOptions);
     const firmCreateDate = ref(null);
+    const firmTypeOptionsValue = ref(firmTypeOptions);
+    const firmTypeSelectedOptionsValue = ref(null);
+    const firmTypeVisible = ref(null);
 
+    const incomeTaxSubType = [
+      {
+        lookupID: 14,
+        subLookupID: 11,
+        name: "Gerçek Kişi/Bilanço Esası",
+        visible: false,
+      },
+      {
+        lookupID: 15,
+        subLookupID: 11,
+        name: "Kollektif",
+        visible: false,
+      },
+      {
+        lookupID: 16,
+        subLookupID: 11,
+        name: "Komandit",
+        visible: false,
+      },
+      {
+        lookupID: 17,
+        subLookupID: 11,
+        name: "Gerçek Kişi/İşletme Esası",
+        visible: false,
+      },
+      {
+        lookupID: 18,
+        subLookupID: 11,
+        name: "Serbest Meslek",
+        visible: false,
+      },
+      {
+        lookupID: 19,
+        subLookupID: 11,
+        name: "Basit Usul",
+        visible: false,
+      },
+      {
+        lookupID: 20,
+        subLookupID: 11,
+        name: "Adi Ortaklık",
+        visible: false,
+      },
+    ];
+    const taxDeptSubType = [
+      {
+        lookupID: 21,
+        subLookupID: 12,
+        name: "Anonim",
+        visible: false,
+      },
+      {
+        lookupID: 22,
+        subLookupID: 12,
+        name: "Eshamlı Komandit/Sermayesi paylara bölünmüş",
+        visible: false,
+      },
+      {
+        lookupID: 23,
+        subLookupID: 12,
+        name: "Limited",
+        visible: false,
+      },
+      {
+        lookupID: 24,
+        subLookupID: 12,
+        name: "Dernek",
+        visible: false,
+      },
+      {
+        lookupID: 25,
+        subLookupID: 12,
+        name: "Vakıf",
+        visible: false,
+      },
+      {
+        lookupID: 26,
+        subLookupID: 12,
+        name: "Kooperatif",
+        visible: false,
+      },
+      {
+        lookupID: 27,
+        subLookupID: 12,
+        name: "İş Ortaklığı",
+        visible: false,
+      },
+    ];
     const fetchData = (page = 1) => {
       api
         .get("/api/TaxOffice")
@@ -163,13 +274,18 @@ export default {
       firmName,
       firmDescription,
       taxOffice,
+      taxOfficeOptionsValue,
       vkntckn,
-      options,
       firmCreateDate,
+      LiableTypeOption,
+      LiableTypeValue,
+      firmTypeOptionsValue,
+      firmTypeSelectedOptionsValue,
+      firmTypeVisible,
       filterFn(name, update, abort) {
         update(() => {
           const needle = name.toLowerCase();
-          options.value = taxOfficeOptions.filter(
+          taxOfficeOptionsValue.value = taxOfficeOptions.filter(
             (v) => v.name.toLowerCase().indexOf(needle) > -1
           );
         });
@@ -200,6 +316,22 @@ export default {
             });
             // console.log(err);
           });
+      },
+      liableTypeSelected(value) {
+        firmTypeVisible.value = true;
+        if (value == 11) {
+          firmTypeOptionsValue.value = [];
+          firmTypeSelectedOptionsValue.value = [];
+          firmTypeOptionsValue.value.push(...incomeTaxSubType);
+        } else if (value == 12) {
+          firmTypeOptionsValue.value = [];
+          firmTypeSelectedOptionsValue.value = [];
+          firmTypeOptionsValue.value.push(...taxDeptSubType);
+        } else {
+          firmTypeSelectedOptionsValue.value = null;
+          firmTypeVisible.value = false;
+          //  firmTypeOptionsValue.value = [{ name: "Hiçbiri", lookupID: 14 }];
+        }
       },
     };
   },

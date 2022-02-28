@@ -206,7 +206,11 @@ export default {
       toggleLeftDrawer,
 
       links1: [
-        { icon: "home", text: "Mükellef Kartları", path: "/CariHesaplar" },
+        {
+          icon: "home",
+          text: "Mükellef Kartları",
+          path: "/cari-hesaplar/ekle",
+        },
         { icon: "whatshot", text: "Mükellef Kartları" },
         { icon: "subscriptions", text: "Home" },
       ],

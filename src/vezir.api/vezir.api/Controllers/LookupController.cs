@@ -1,4 +1,3 @@
-#nullable disable
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using vezir.api.Interface;
@@ -8,7 +7,7 @@ namespace vezir.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LookupController : Controller
+    public class LookupController : ControllerBase
     {
         private readonly VezirApiContext _context;
         private readonly ILookupRepository _lookupRepository;
@@ -25,6 +24,7 @@ namespace vezir.api.Controllers
         {
             return _lookupRepository.Find(p => p.SubLookupID == id);
         }
+    
 
         // GET: api/Lookup/5
         [HttpGet("{id}")]

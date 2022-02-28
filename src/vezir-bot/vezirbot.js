@@ -1,7 +1,6 @@
 const puppeteer = require("puppeteer");
 const htmlparser2 = require("htmlparser2");
 const cheerio = require("cheerio");
-const path = require("path");
 const download = require("download");
 
 (async () => {
@@ -20,6 +19,7 @@ const download = require("download");
   const newPagePromise = new Promise((x) => page.once("popup", x));
   const newPage = await newPagePromise;
   await newPage.setViewport({ width: 0, height: 0 });
+
   const userCode = await newPage.waitForXPath(
     "/html/body/div/div/table[1]/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[3]/input"
   );
@@ -44,8 +44,6 @@ const download = require("download");
     (form) => form.click()
   );
 
-  console.log(page.url());
-  console.log(typeof page.url());
   await newPage.waitForTimeout(2000);
   await newPage.$eval("#sorgulaButon", (form) => form.click());
   await newPage.waitForTimeout(2000);
