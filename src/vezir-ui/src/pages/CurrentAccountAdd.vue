@@ -143,9 +143,9 @@ import { api } from "boot/axios";
 
 const taxOfficeOptions = [];
 const liableType = [
-  { label: "Gelir Vergisi", value: "11" },
-  { label: "Kurumlar Vergisi", value: "12" },
-  { label: "Hiçbiri", value: "13" },
+  { label: "Gelir Vergisi", value: "6" },
+  { label: "Kurumlar Vergisi", value: "7" },
+  { label: "Hiçbiri", value: "8" },
 ];
 const firmTypeOptions = [];
 export default {
@@ -324,11 +324,11 @@ export default {
       },
       liableTypeSelected(value) {
         firmTypeVisible.value = true;
-        if (value == 11) {
+        if (value == 6) {
           firmTypeOptionsValue.value = [];
           firmTypeSelectedOptionsValue.value = [];
           firmTypeOptionsValue.value.push(...incomeTaxSubType);
-        } else if (value == 12) {
+        } else if (value == 7) {
           firmTypeOptionsValue.value = [];
           firmTypeSelectedOptionsValue.value = [];
           firmTypeOptionsValue.value.push(...taxDeptSubType);
