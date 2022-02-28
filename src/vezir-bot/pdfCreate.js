@@ -2,32 +2,51 @@ const fs = require("fs");
 const PDFDocument = require("pdfkit");
 
 function createInvoice(invoice, path) {
-  let doc = new PDFDocument({ size: "A4", margin: 50 });
+  let doc = new PDFDocument({ size: "A4", margin: 50, lang: "orororos" });
 
+  doc.info["Title"] = "Vezir";
+  doc.info["Author"] = "Vezir";
+  doc.info["Content Creator"] = "Vezir";
+  doc.info["Encoding software"] = "Vezir";
+  // Register a font
+
+  doc.registerFont("Thin", "font/BebasNeue-Regular.ttf");
+  doc.registerFont("ubuntu", "font/Ubuntu-Regular.ttf");
   generateHeader(doc);
   generateCustomerInformation(doc, invoice);
   generateInvoiceTable(doc, invoice);
   generateFooter(doc);
 
   doc.end();
-  doc.pipe(fs.createWriteStream(path));
+  doc.pipe(fs.createWriteStream(path, "UTF-8"));
 }
 
 function generateHeader(doc) {
   doc
+    .font("ubuntu")
     .image("vezir.png", 50, 45, { width: 100 })
     .fillColor("#444444")
-    .fontSize(20)
-    .text("ACME Inc.", 110, 57)
-    .fontSize(10)
-    .text("ACME Inc.", 200, 50, { align: "right" })
-    .text("123 Main Street", 200, 65, { align: "right" })
-    .text("New York, NY, 10025", 200, 80, { align: "right" })
+
+    .fontSize(14)
+    .text("Tolga Çokgezen", 200, 55, { align: "right" })
+    .fontSize(11)
+    .text("Tel : 0 535 348 20 20", 200, 72, { align: "right" })
+
+    .text("ZİRAAT BANKASİ BAYRAMPASA SB", 200, 85, { align: "right" })
+    .text("IBAN: TR37 0001 0007 0759 6492 9850 01", 200, 100, {
+      align: "right",
+    })
+    .text("GARANTİ BANKASI A.Ş.TOPKAPI/MALTEPE ŞB", 200, 115, {
+      align: "right",
+    })
+    .text("IBAN NO: TR24 0006 2000 5340 0006 6897 46", 200, 130, {
+      align: "right",
+    })
     .moveDown();
 }
 
 function generateCustomerInformation(doc, invoice) {
-  doc.fillColor("#444444").fontSize(20).text("Invoice", 50, 160);
+  doc.fillColor("#444444").fontSize(20).text("Cari Hesap Ekstresi", 50, 160);
 
   generateHr(doc, 185);
 
@@ -35,22 +54,22 @@ function generateCustomerInformation(doc, invoice) {
 
   doc
     .fontSize(10)
-    .text("Invoice Number:", 50, customerInformationTop)
-    .font("Helvetica-Bold")
+    .text("Cari Hesap Ekstresi", 50, customerInformationTop)
+    .font("ubuntu")
     .text(invoice.invoice_nr, 150, customerInformationTop)
-    .font("Helvetica")
-    .text("Invoice Date:", 50, customerInformationTop + 15)
+    //.font("JetBrains Mono")
+    .text("Fatura Tarihi:", 50, customerInformationTop + 15)
     .text(formatDate(new Date()), 150, customerInformationTop + 15)
-    .text("Balance Due:", 50, customerInformationTop + 30)
+    .text("Toplam Ödeme:", 50, customerInformationTop + 30)
     .text(
       formatCurrency(invoice.subtotal - invoice.paid),
       150,
       customerInformationTop + 30
     )
 
-    .font("Helvetica-Bold")
+    //.font("Helvetica-Bold")
     .text(invoice.shipping.name, 300, customerInformationTop)
-    .font("Helvetica")
+    //.font("Helvetica")
     .text(invoice.shipping.address, 300, customerInformationTop + 15)
     .text(
       invoice.shipping.city +
@@ -70,18 +89,18 @@ function generateInvoiceTable(doc, invoice) {
   let i;
   const invoiceTableTop = 330;
 
-  doc.font("Helvetica-Bold");
+  // doc.font("Helvetica-Bold");
   generateTableRow(
     doc,
     invoiceTableTop,
-    "Item",
-    "Description",
-    "Unit Cost",
-    "Quantity",
-    "Line Total"
+    "Beyanname",
+    "Dönemi",
+    "Vadesi",
+    "Tutar",
+    "Tutar"
   );
   generateHr(doc, invoiceTableTop + 20);
-  doc.font("Helvetica");
+  //doc.font("Helvetica");
 
   for (i = 0; i < invoice.items.length; i++) {
     const item = invoice.items[i];
@@ -105,7 +124,7 @@ function generateInvoiceTable(doc, invoice) {
     subtotalPosition,
     "",
     "",
-    "Subtotal",
+    "Alt Toplam",
     "",
     formatCurrency(invoice.subtotal)
   );
@@ -116,33 +135,36 @@ function generateInvoiceTable(doc, invoice) {
     paidToDatePosition,
     "",
     "",
-    "Paid To Date",
+    "Ek kök",
     "",
     formatCurrency(invoice.paid)
   );
 
   const duePosition = paidToDatePosition + 25;
-  doc.font("Helvetica-Bold");
+  //doc.font("Helvetica-Bold");
   generateTableRow(
     doc,
     duePosition,
     "",
     "",
-    "Balance Due",
+    "Toplam",
     "",
     formatCurrency(invoice.subtotal - invoice.paid)
   );
-  doc.font("Helvetica");
+  //doc.font("Helvetica");
 }
 
 function generateFooter(doc) {
   doc
     .fontSize(10)
     .text(
-      "Payment is due within 15 days. Thank you for your business.",
+      "Ödemelerinizi yapınız, ödeme yapmadan ödeme yapılmazsa, ödeme yapmadan ödeme yapılmaz.",
       50,
       780,
-      { align: "center", width: 500 }
+      {
+        align: "center",
+        width: 500,
+      }
     );
 }
 
@@ -169,7 +191,7 @@ function generateHr(doc, y) {
 }
 
 function formatCurrency(cents) {
-  return "$" + (cents / 100).toFixed(2);
+  return (cents / 100).toFixed(2) + " TL";
 }
 
 function formatDate(date) {
@@ -182,28 +204,34 @@ function formatDate(date) {
 
 const invoice = {
   shipping: {
-    name: "John Doe",
-    address: "1234 Main Street",
-    city: "San Francisco",
-    state: "CA",
-    country: "US",
+    name: "Alkan ARSLAN (KODPOINT)",
+    address: "Yenidoğan Mah.",
+    city: "Balıkesir",
+    state: "IST",
+    country: "IST",
     postal_code: 94111,
   },
   items: [
     {
-      item: "TC 100",
-      description: "Toner Cartridge",
+      item: "Devir",
+      description: "31.01.2022-31.01.2022",
+      quantity: 1,
+      amount: 7000,
+    },
+    {
+      item: "GGECICI",
+      description: "01012021-31122021",
       quantity: 2,
       amount: 6000,
     },
     {
-      item: "USB_EXT",
-      description: "USB Cable Extender",
+      item: "KDV1",
+      description: "01012021-31122021",
       quantity: 1,
       amount: 2000,
     },
   ],
-  subtotal: 8000,
+  subtotal: 15000,
   paid: 0,
   invoice_nr: 1234,
 };
