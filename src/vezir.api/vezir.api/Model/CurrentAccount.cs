@@ -8,5 +8,6 @@ public class CurrentAccount
     public int TaxOfficeId { get; set; }
     public Int64 TaxNumber { get; set; }
     public DateTime FirmOpenDate { get; set; }
+    public int FirmTypeId { get; set; }
     public DateTime CreateDate { get; set; }
 }

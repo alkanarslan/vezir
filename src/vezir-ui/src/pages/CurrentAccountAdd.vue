@@ -165,88 +165,88 @@ export default {
 
     const incomeTaxSubType = [
       {
-        lookupID: 14,
-        subLookupID: 11,
+        lookupID: 9,
+        subLookupID: 6,
         name: "Gerçek Kişi/Bilanço Esası",
         visible: false,
       },
       {
-        lookupID: 15,
-        subLookupID: 11,
+        lookupID: 10,
+        subLookupID: 6,
         name: "Kollektif",
         visible: false,
       },
       {
-        lookupID: 16,
-        subLookupID: 11,
+        lookupID: 11,
+        subLookupID: 6,
         name: "Komandit",
         visible: false,
       },
       {
-        lookupID: 17,
-        subLookupID: 11,
+        lookupID: 12,
+        subLookupID: 6,
         name: "Gerçek Kişi/İşletme Esası",
         visible: false,
       },
       {
-        lookupID: 18,
-        subLookupID: 11,
+        lookupID: 13,
+        subLookupID: 6,
         name: "Serbest Meslek",
         visible: false,
       },
       {
-        lookupID: 19,
-        subLookupID: 11,
+        lookupID: 14,
+        subLookupID: 6,
         name: "Basit Usul",
         visible: false,
       },
       {
-        lookupID: 20,
-        subLookupID: 11,
+        lookupID: 15,
+        subLookupID: 6,
         name: "Adi Ortaklık",
         visible: false,
       },
     ];
     const taxDeptSubType = [
       {
-        lookupID: 21,
-        subLookupID: 12,
+        lookupID: 16,
+        subLookupID: 7,
         name: "Anonim",
         visible: false,
       },
       {
-        lookupID: 22,
-        subLookupID: 12,
+        lookupID: 17,
+        subLookupID: 7,
         name: "Eshamlı Komandit/Sermayesi paylara bölünmüş",
         visible: false,
       },
       {
-        lookupID: 23,
-        subLookupID: 12,
+        lookupID: 18,
+        subLookupID: 7,
         name: "Limited",
         visible: false,
       },
       {
-        lookupID: 24,
-        subLookupID: 12,
+        lookupID: 19,
+        subLookupID: 7,
         name: "Dernek",
         visible: false,
       },
       {
-        lookupID: 25,
-        subLookupID: 12,
+        lookupID: 20,
+        subLookupID: 7,
         name: "Vakıf",
         visible: false,
       },
       {
-        lookupID: 26,
-        subLookupID: 12,
+        lookupID: 21,
+        subLookupID: 7,
         name: "Kooperatif",
         visible: false,
       },
       {
-        lookupID: 27,
-        subLookupID: 12,
+        lookupID: 22,
+        subLookupID: 7,
         name: "İş Ortaklığı",
         visible: false,
       },
@@ -291,14 +291,18 @@ export default {
         });
       },
       onSubmit() {
+        const sendData = {
+          firmName: firmName.value,
+          firmDescription: firmDescription.value,
+          taxOfficeId: taxOffice.value,
+          taxNumber: vkntckn.value,
+          firmOpenDate: firmCreateDate.value,
+          firmTypeId: firmTypeSelectedOptionsValue.value
+            ? firmTypeSelectedOptionsValue.value
+            : 8,
+        };
         api
-          .post("/api/CurrentAccount", {
-            firmName: firmName.value,
-            firmDescription: firmDescription.value,
-            taxOfficeId: taxOffice.value,
-            taxNumber: vkntckn.value,
-            firmOpenDate: firmCreateDate.value,
-          })
+          .post("/api/CurrentAccount", sendData)
           .then((res) => {
             $q.notify({
               type: "positive",
@@ -309,6 +313,7 @@ export default {
           })
           .finally(() => {})
           .catch((err) => {
+            console.log(sendData);
             $q.notify({
               type: "negative",
               message: err.message,
