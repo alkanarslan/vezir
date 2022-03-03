@@ -1,27 +1,27 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Quartz;
 using vezir.api;
 using vezir.api.GenericRepository;
 using vezir.api.Helper;
 using vezir.api.Hubs;
 using vezir.api.Interface;
+using vezir.api.Jobs;
 using vezir.api.Repository;
 using vezir.api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IUriService>(o =>
 {
     var accessor = o.GetRequiredService<IHttpContextAccessor>();
-    var request = accessor.HttpContext.Request;
-    var uri = string.Concat(request.Scheme, "://" ,request.Host.ToUriComponent());
+    var request = accessor.HttpContext?.Request;
+    var uri = string.Concat(request?.Scheme, "://" ,request?.Host.ToUriComponent());
     return new UriService(uri);
 });
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
@@ -41,15 +41,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
  
     });
- 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "_vezirAllowSpecificOrigins",
         builder =>
         {
             builder.SetIsOriginAllowed(_ => true).AllowAnyMethod().AllowAnyHeader().AllowCredentials();
-
-
         });
 });
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
@@ -61,23 +58,27 @@ builder.Services.AddTransient<ILookupRepository, LookupRepository>();
 builder.Services.AddTransient<IDeclarationsService, DeclarationsRepository>();
 builder.Services.AddTransient<ITaxOfficeRepository, TaxOfficeRepository>();
 builder.Services.AddAuthorization();
+builder.Services.AddQuartz(q =>
+{
+    q.UseMicrosoftDependencyInjectionJobFactory();
+    var jobKey = new JobKey("DeclarationCalcJob");
+    q.AddJob<DeclarationCalcJob>(opts => opts.WithIdentity(jobKey));
+    q.AddTrigger(opts => opts.ForJob(jobKey).WithIdentity("DeclarationCalcJob-trigger").WithCronSchedule("0 0 0 ? * * *"));
+});
+
+builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-
-//app.UseHttpsRedirection();
-
 app.UseCors("_vezirAllowSpecificOrigins");
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 app.MapHub<DeclarationHub>("/vezirhub");
 app.Run();

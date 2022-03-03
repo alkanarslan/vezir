@@ -25,7 +25,7 @@ namespace vezir.api.Controllers
             var route = Request.Path.Value;
          
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-            var pagedData = await _declarationsService.ToFilterListAsync(validFilter);
+            var pagedData = await _declarationsService.DeclarationsFilterListAsync(validFilter);
             var totalRecords = await _declarationsService.GetCountAsync();
             //Console.WriteLine(totalRecords);
             //await _declarationsHub.Clients.All.SendAsync("Kamil",validFilter);

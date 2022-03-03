@@ -11,5 +11,8 @@ public class Declarations
     public string Name { get; set; }
     [Required]
     public string Code { get; set; }
+    
+    [Required]
+    public int TimeType { get; set; }
 
 }
