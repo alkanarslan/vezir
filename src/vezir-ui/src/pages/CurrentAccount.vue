@@ -33,7 +33,34 @@
               <q-tab-panels v-model="tab" animated>
                 <q-tab-panel name="mails">
                   <div class="text-h6">Beyanname</div>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+
+                  <q-select
+                    filled
+                    v-model="declarationsSelectValue"
+                    use-input
+                    hide-selected
+                    fill-input
+                    label="Vergi Dairesi *"
+                    input-debounce="0"
+                    :options="declarationsValue"
+                    option-value="id"
+                    option-label="name"
+                    @filter="filterFn"
+                    hint="Vergi dairesini seçiniz."
+                    lazy-rules
+                    emit-value
+                    map-options
+                    clearable
+                    :rules="[(val) => !!val || 'Vergi dairesini seçiniz.']"
+                  >
+                    <template v-slot:no-option>
+                      <q-item>
+                        <q-item-section class="text-grey">
+                          Sonuç Bulunamadı
+                        </q-item-section>
+                      </q-item>
+                    </template>
+                  </q-select>
                 </q-tab-panel>
                 <q-tab-panel name="firms">
                   <div class="text-h6">Firma Bilgileri</div>
@@ -63,13 +90,16 @@ import { api } from "boot/axios";
 import { useQuasar } from "quasar";
 import { useRoute } from "vue-router";
 import { HubConnectionBuilder } from "@microsoft/signalr";
+const declarationsOptions = [];
 export default {
   setup() {
     const restdata = ref([]);
+    const declarationsSelectValue = ref(null);
+    const declarationsValue = ref(declarationsOptions);
     const $q = useQuasar();
     const route = useRoute();
     const currentRouteID = route.params.id;
-    console.log("orororodfsfsfs");
+
     const fetchData = (id = 0) => {
       api
         .get("/api/CurrentAccount", {
@@ -93,9 +123,42 @@ export default {
 
     fetchData(currentRouteID);
 
+    const fetchDataDeclarations = (page = 1) => {
+      api
+        .get("/api/Declarations", {
+          params: { pageNumber: page, pageSize: 120 },
+        })
+        .then((res) => {
+          declarationsOptions.push(...res.data.data);
+        })
+        .finally(() => {
+          //  loading.value = false;
+        })
+        .catch((err) => {
+          $q.notify({
+            type: "negative",
+            message: err.message,
+            position: "center",
+          });
+          // loading.value = true;
+          console.log(err);
+        });
+    };
+
+    fetchDataDeclarations();
     return {
+      declarationsValue,
+      declarationsSelectValue,
       restdata,
       tab: ref("mails"),
+      filterFn(name, update, abort) {
+        update(() => {
+          const needle = name.toLowerCase();
+          declarationsValue.value = declarationsOptions.filter(
+            (v) => v.name.toLowerCase().indexOf(needle) > -1
+          );
+        });
+      },
     };
   },
 };
