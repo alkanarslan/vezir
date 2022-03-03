@@ -188,10 +188,11 @@ export default {
 
       filterFn(name, update, abort) {
         update(() => {
-          const needle = name.toLowerCase();
+          let locales = ["tr", "TR", "tr-TR", "tr-u-co-search", "tr-x-turkish"];
+          const needle = name.toLowerCase(locales);
           console.log(needle);
           declarationsValue.value = declarationsOptions.filter(
-            (v) => v.name.toLowerCase().indexOf(needle) > -1
+            (v) => v.name.toLowerCase(locales).indexOf(needle) > -1
           );
         });
       },
