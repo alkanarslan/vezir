@@ -6,7 +6,7 @@ using vezir.api.Interface;
 
 namespace vezir.api.Controllers
 {
-    [Route("api/[controller]")]
+
     [ApiController]
     public class DeclarationsController : ControllerBase
     {
@@ -20,6 +20,7 @@ namespace vezir.api.Controllers
             _declarationsHub = declarationsHub;
         }
         [HttpGet]
+        [Route("api/Declarations")]
         public async Task<IActionResult> AllDeclarations([FromQuery] PaginationFilter filter)
         {
             var route = Request.Path.Value;
@@ -35,13 +36,20 @@ namespace vezir.api.Controllers
         }
         
         
-      
-        [HttpPost(Name = "Signaldeneme")]
+        [Route("api/Declarations/Signaldeneme")]
+        [HttpGet]
         public async Task<IActionResult> All2Declarations(string id)
         {
             await _declarationsHub.Clients.All.SendAsync("SendMessage",id);
             return Ok();
         }
 
+        
+        [Route("api/Declarations/All")]
+        [HttpGet]
+        public async Task<IActionResult> AllDeclarations()
+        {
+            return Ok();
+        }
     }
 }

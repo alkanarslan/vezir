@@ -36,7 +36,7 @@ const download = require("download");
     const beyannmeTipi = $(tds[1]).text().trim();
     const vdNo = $(tds[2]).text().trim();
     const onay = $(tds[8]).text().trim();
-
+    const donem = $(tds[5]).text().trim();
     tahakkukId = "yok";
 
     $(element)
@@ -67,6 +67,7 @@ const download = require("download");
         vdNo,
         onay,
         tahakkukId,
+        donem,
       };
       scrapedData.push(tableRow);
     }

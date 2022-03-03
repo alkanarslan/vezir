@@ -33,34 +33,49 @@
               <q-tab-panels v-model="tab" animated>
                 <q-tab-panel name="mails">
                   <div class="text-h6">Beyanname</div>
+                  {{ declarationsSelectValue }}
+                  <form @submit.prevent="simulateSubmit" class="q-pa-md">
+                    <div class="q-pa-md">
+                      <q-select
+                        filled
+                        v-model="declarationsSelectValue"
+                        use-input
+                        use-chips
+                        multiple
+                        label="Beyanname Ekleyin *"
+                        input-debounce="0"
+                        :options="declarationsValue"
+                        option-value="id"
+                        option-label="title"
+                        @filter="filterFn"
+                        emit-value
+                        map-options
+                        behavior="dialog"
+                      >
+                        <template v-slot:no-option>
+                          <q-item>
+                            <q-item-section class="text-grey">
+                              Sonuç Bulunamadı
+                            </q-item-section>
+                          </q-item>
+                        </template>
+                      </q-select>
 
-                  <q-select
-                    filled
-                    v-model="declarationsSelectValue"
-                    use-input
-                    hide-selected
-                    fill-input
-                    label="Vergi Dairesi *"
-                    input-debounce="0"
-                    :options="declarationsValue"
-                    option-value="id"
-                    option-label="name"
-                    @filter="filterFn"
-                    hint="Vergi dairesini seçiniz."
-                    lazy-rules
-                    emit-value
-                    map-options
-                    clearable
-                    :rules="[(val) => !!val || 'Vergi dairesini seçiniz.']"
-                  >
-                    <template v-slot:no-option>
-                      <q-item>
-                        <q-item-section class="text-grey">
-                          Sonuç Bulunamadı
-                        </q-item-section>
-                      </q-item>
-                    </template>
-                  </q-select>
+                      <div class="row justify-end">
+                        <q-btn
+                          type="submit"
+                          :loading="submitting"
+                          label="Kaydet"
+                          class="q-mt-md"
+                          color="primary"
+                        >
+                          <template v-slot:loading>
+                            <q-spinner-bars color="white" />
+                          </template>
+                        </q-btn>
+                      </div>
+                    </div>
+                  </form>
                 </q-tab-panel>
                 <q-tab-panel name="firms">
                   <div class="text-h6">Firma Bilgileri</div>
@@ -99,6 +114,7 @@ export default {
     const $q = useQuasar();
     const route = useRoute();
     const currentRouteID = route.params.id;
+    const submitting = ref(false);
 
     const fetchData = (id = 0) => {
       api
@@ -144,6 +160,22 @@ export default {
           console.log(err);
         });
     };
+    function simulateSubmit() {
+      submitting.value = true;
+
+      // Simulating a delay here.
+      // When we are done, we reset "submitting"
+      // Boolean to false to restore the
+      // initial state.
+      setTimeout(() => {
+        // delay simulated, we are done,
+        // now restoring submit to its initial state
+        submitting.value = false;
+        var myJsonString = JSON.stringify(declarationsSelectValue.value);
+        var myJsonString1 = JSON.stringify(restdata.value.id);
+        console.log(myJsonString + myJsonString1);
+      }, 1000);
+    }
 
     fetchDataDeclarations();
     return {
@@ -151,9 +183,13 @@ export default {
       declarationsSelectValue,
       restdata,
       tab: ref("mails"),
+      simulateSubmit,
+      submitting,
+
       filterFn(name, update, abort) {
         update(() => {
           const needle = name.toLowerCase();
+          console.log(needle);
           declarationsValue.value = declarationsOptions.filter(
             (v) => v.name.toLowerCase().indexOf(needle) > -1
           );
