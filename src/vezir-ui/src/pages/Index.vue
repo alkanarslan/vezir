@@ -45,6 +45,7 @@ export default defineComponent({
       { name: "id", label: "ID", field: "id" },
       { name: "name", label: "Açıklama", align: "left", field: "name" },
       { name: "code", label: "Kod", field: "code" },
+      { name: "timeValue", label: "Zaman Tanımı", field: "timeValue" },
     ];
 
     const fetchData = (page = 1) => {
