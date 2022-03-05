@@ -15,6 +15,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         Context.Set<T>().Add(entity);
     }
+
+    public void AddAsync(T entity)
+    {
+        Context.Set<T>().AddAsync(entity);
+    }
+
     public void AddRange(IEnumerable<T> entities)
     {
         Context.Set<T>().AddRange(entities);
@@ -60,5 +66,10 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     public virtual void Edit(T entity)
     {
         Context.Entry(entity).State = EntityState.Modified;
+    }
+
+    public Task SaveChangesAsync()
+    {
+        return Context.SaveChangesAsync();
     }
 }

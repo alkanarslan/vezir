@@ -1,4 +1,3 @@
-
 using Microsoft.EntityFrameworkCore;
 using vezir.api.Interface;
 using vezir.api.Model;
@@ -10,19 +9,13 @@ namespace vezir.api.Repository;
 
 public class DeclarationsRepository : GenericRepository<Declarations>, IDeclarationsService
 {
- 
     public DeclarationsRepository(VezirApiContext context) : base(context)
     {
     }
-    
+
     public Task<List<DeclarationsResponseModel>> DeclarationsFilterListAsync(PaginationFilter paginationFilter)
     {
-        
-        
-        
         var skip = (paginationFilter.PageNumber - 1) * paginationFilter.PageSize;
-
-
         var saaa = (from p in Context.Declarations
             join c in Context.Lookup
                 on p.TimeType equals c.LookupID
@@ -33,9 +26,10 @@ public class DeclarationsRepository : GenericRepository<Declarations>, IDeclarat
                 TimeType = p.TimeType,
                 Code = p.Code,
                 TimeValue = c.Name
-            }).Skip(skip).Take(paginationFilter.PageSize).ToListAsync();; 
-        
-       
+            }).Skip(skip).Take(paginationFilter.PageSize).ToListAsync();
+        ;
+
+
         // var returnList = Context.Declarations.Join(Context.Lookup, declarations => declarations.TimeType,
         //     lookup => lookup.LookupID, (declarations, lookup) => new DeclarationsResponseModel
         //     {
@@ -48,5 +42,4 @@ public class DeclarationsRepository : GenericRepository<Declarations>, IDeclarat
 
         return saaa;
     }
-
 }

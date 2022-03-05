@@ -50,7 +50,6 @@
                         @filter="filterFn"
                         emit-value
                         map-options
-                        behavior="dialog"
                       >
                         <template v-slot:no-option>
                           <q-item>
@@ -163,18 +162,29 @@ export default {
     function simulateSubmit() {
       submitting.value = true;
 
-      // Simulating a delay here.
-      // When we are done, we reset "submitting"
-      // Boolean to false to restore the
-      // initial state.
-      setTimeout(() => {
-        // delay simulated, we are done,
-        // now restoring submit to its initial state
-        submitting.value = false;
-        var myJsonString = JSON.stringify(declarationsSelectValue.value);
-        var myJsonString1 = JSON.stringify(restdata.value.id);
-        console.log(myJsonString + myJsonString1);
-      }, 1000);
+      api
+        .post(
+          "/api/declarations/firm-assign?firmId=" + restdata.value.id,
+          declarationsSelectValue.value
+        )
+        .then((res) => {
+          $q.notify({
+            type: "positive",
+            message: "Kayıt Başarılı",
+            position: "center",
+          });
+          submitting.value = false;
+        })
+        .finally(() => {})
+        .catch((err) => {
+          console.log(sendData);
+          $q.notify({
+            type: "negative",
+            message: err.message,
+            position: "center",
+          });
+          // console.log(err);
+        });
     }
 
     fetchDataDeclarations();

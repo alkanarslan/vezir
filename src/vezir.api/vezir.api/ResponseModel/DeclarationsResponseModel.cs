@@ -7,6 +7,7 @@ public class DeclarationsResponseModel
     public string Code { get; set; }
     public int TimeType { get; set; }
     public string TimeValue { get; set; }
-
-    public string Title => Code + " " + Name + " " + "(" +TimeValue + ")";
+    
+    public int LastDay { get; set; }
+    public string Title => Code + " " + Name + " " + "(" + TimeValue + ")";
 }

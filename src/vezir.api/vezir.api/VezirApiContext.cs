@@ -14,6 +14,9 @@ public class VezirApiContext : DbContext
         public virtual DbSet<Lookup> Lookup { get; set; }
         public virtual DbSet<Declarations> Declarations { get; set; }
         public virtual DbSet<TaxOffice> TaxOffice  { get; set; }
+        public virtual DbSet<FirmDeclarations> FirmDeclarations { get; set; }
+        public virtual DbSet<PlanningDeclarations> PlanningDeclarations { get; set; }
+        public virtual DbSet<PlanningDeclarationsVerification> PlanningDeclarationsVerification { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RefreshToken>(entity =>

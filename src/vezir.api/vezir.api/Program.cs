@@ -57,6 +57,9 @@ builder.Services.AddTransient<ICurrentAccount, CurrentAccountService>();
 builder.Services.AddTransient<ILookupRepository, LookupRepository>();
 builder.Services.AddTransient<IDeclarationsService, DeclarationsRepository>();
 builder.Services.AddTransient<ITaxOfficeRepository, TaxOfficeRepository>();
+builder.Services.AddTransient<IFirmDeclarationsService, FirmDeclarationsRepository>();
+builder.Services.AddTransient<IPlanningDeclarationsService, PlanningDeclarationsRepository>();
+builder.Services.AddTransient<IPlanningDeclarationsVerificationService, PlanningDeclarationsVerificationRepository>();
 builder.Services.AddAuthorization();
 builder.Services.AddQuartz(q =>
 {
