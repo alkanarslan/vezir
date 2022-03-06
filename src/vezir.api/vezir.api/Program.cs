@@ -52,7 +52,6 @@ builder.Services.AddCors(options =>
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddTransient<ITaskService, TaskService>();
 builder.Services.AddTransient<ICurrentAccount, CurrentAccountService>();
 builder.Services.AddTransient<ILookupRepository, LookupRepository>();
 builder.Services.AddTransient<IDeclarationsService, DeclarationsRepository>();

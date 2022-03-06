@@ -19,4 +19,7 @@ public interface IGenericRepository<T> where T : class
     void RemoveRange(IEnumerable<T> entities);
     void Edit(T entity);
     Task SaveChangesAsync();
+    Task<List<T>> ToListAsync(Expression<Func<T, bool>> predicate);
+    T FindOne(Expression<Func<T, bool>> predicate);
+    Task ItemAny(Expression<Func<T, bool>> predicate);
 }

@@ -5,7 +5,6 @@ public partial class User
     public User()
     {
         RefreshTokens = new HashSet<RefreshToken>();
-        Tasks = new HashSet<Task>();
     }
  
     public int Id { get; set; }
@@ -18,5 +17,5 @@ public partial class User
     public bool Active { get; set; }
  
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
-    public virtual ICollection<Task> Tasks { get; set; }
+   
 }

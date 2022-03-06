@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using vezir.api.Model;
-using Task = vezir.api.Model.Task;
+
 
 
 namespace vezir.api;
@@ -8,7 +8,6 @@ public class VezirApiContext : DbContext
     {
         public VezirApiContext(DbContextOptions options) :base(options) {}
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
-        public virtual DbSet<Task> Tasks { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<CurrentAccount> CurrentAccount { get; set; }
         public virtual DbSet<Lookup> Lookup { get; set; }
@@ -23,7 +22,6 @@ public class VezirApiContext : DbContext
             {
                
                 entity.Property(e => e.ExpiryDate).HasColumnType("smalldatetime");
-
                 entity.Property(e => e.TokenHash)
                     .IsRequired()
                     .HasMaxLength(1000);
@@ -44,27 +42,6 @@ public class VezirApiContext : DbContext
 
                 entity.ToTable("RefreshToken");
             });
-
-            modelBuilder.Entity<Task>(entity =>
-            {
-               
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(100);
-
-                entity.Property(e => e.Ts)
-                    .HasColumnType("smalldatetime")
-                    .HasColumnName("TS");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Tasks)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Task_User");
-
-                entity.ToTable("Task");
-            });
-
             modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(e => e.Email)

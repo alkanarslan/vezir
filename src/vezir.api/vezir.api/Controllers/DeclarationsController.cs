@@ -21,7 +21,7 @@ namespace vezir.api.Controllers
             ICurrentAccount currentAccount)
         {
             _declarationsService = declarationsService;
-            this._uriService = uriService;
+            _uriService = uriService;
             _declarationsHub = declarationsHub;
             _firmDeclarationsService = firmDeclarationsService;
             _currentAccount = currentAccount;
@@ -36,8 +36,6 @@ namespace vezir.api.Controllers
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
             var pagedData = await _declarationsService.DeclarationsFilterListAsync(validFilter);
             var totalRecords = await _declarationsService.GetCountAsync();
-            //Console.WriteLine(totalRecords);
-            //await _declarationsHub.Clients.All.SendAsync("Kamil",validFilter);
             var pagedReponse =
                 PaginationHelper.CreatePagedReponse(pagedData, validFilter, totalRecords, _uriService, route);
 
@@ -59,12 +57,15 @@ namespace vezir.api.Controllers
         public async Task<IActionResult> DeclarationsFirmAssing(int firmId, List<int> declarationSelectId)
         {
             var firmItem = await _currentAccount.GetCurrentAccount(firmId);
-            
+
             if (firmItem != null)
             {
                 foreach (var itemDeclarations in declarationSelectId)
                 {
-                    
+                    #region bunlar eklenmişmi diye bakabilirsin yada bak
+
+                    #endregion
+
                     _firmDeclarationsService.AddAsync(new FirmDeclarations
                     {
                         FirmId = firmItem.Id,
@@ -72,12 +73,14 @@ namespace vezir.api.Controllers
                         DeclarationsId = itemDeclarations
                     });
                 }
+
                 await _firmDeclarationsService.SaveChangesAsync();
             }
             else
             {
                 return BadRequest("Boyle bir firma kayıtlı değil");
             }
+
             return Ok("Ok");
         }
     }

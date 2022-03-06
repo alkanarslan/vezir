@@ -7,9 +7,7 @@
             {{ restdata.firmName }} ({{ restdata.firmDescription }})
           </div>
         </q-card-section>
-
         <q-separator inset />
-
         <div class="q-pa-md">
           <div class="q-gutter-y-md">
             <q-card>
@@ -27,9 +25,7 @@
                 <q-tab name="alarms" icon="people" label="İletişim Bilgileri" />
                 <q-tab name="movies" icon="alarm" label="Bildirimler" />
               </q-tabs>
-
               <q-separator />
-
               <q-tab-panels v-model="tab" animated>
                 <q-tab-panel name="mails">
                   <div class="text-h6">Beyanname</div>
@@ -59,7 +55,6 @@
                           </q-item>
                         </template>
                       </q-select>
-
                       <div class="row justify-end">
                         <q-btn
                           type="submit"
@@ -84,7 +79,6 @@
                   <div class="text-h6">İletişim Bilgileri</div>
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 </q-tab-panel>
-
                 <q-tab-panel name="movies">
                   <div class="text-h6">Bildirimler</div>
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -161,7 +155,6 @@ export default {
     };
     function simulateSubmit() {
       submitting.value = true;
-
       api
         .post(
           "/api/declarations/firm-assign?firmId=" + restdata.value.id,
@@ -173,17 +166,17 @@ export default {
             message: "Kayıt Başarılı",
             position: "center",
           });
+        })
+        .finally(() => {
+          declarationsSelectValue.value = null;
           submitting.value = false;
         })
-        .finally(() => {})
         .catch((err) => {
-          console.log(sendData);
           $q.notify({
             type: "negative",
             message: err.message,
             position: "center",
           });
-          // console.log(err);
         });
     }
 

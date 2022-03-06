@@ -7,6 +7,7 @@ namespace vezir.api.GenericRepository;
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
     protected readonly VezirApiContext Context;
+    
     public GenericRepository(VezirApiContext context)
     {
         Context = context;
@@ -71,5 +72,20 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     public Task SaveChangesAsync()
     {
         return Context.SaveChangesAsync();
+    }
+
+    public Task<List<T>> ToListAsync(Expression<Func<T, bool>> predicate)
+    {
+        throw new NotImplementedException();
+    }
+
+    public T FindOne(Expression<Func<T, bool>> predicate)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task ItemAny(Expression<Func<T, bool>> predicate)
+    {
+        return Context.Set<T>().AnyAsync();
     }
 }
