@@ -12,19 +12,21 @@ namespace vezir.api.Controllers
     {
         private readonly IDeclarationsService _declarationsService;
         private readonly IFirmDeclarationsService _firmDeclarationsService;
+        private readonly IPlanningDeclarationsService _planningDeclarationsService;
         private readonly ICurrentAccount _currentAccount;
         private readonly IUriService _uriService;
         private readonly IHubContext<DeclarationHub> _declarationsHub;
 
         public DeclarationsController(IDeclarationsService declarationsService, IUriService uriService,
             IHubContext<DeclarationHub> declarationsHub, IFirmDeclarationsService firmDeclarationsService,
-            ICurrentAccount currentAccount)
+            ICurrentAccount currentAccount, IPlanningDeclarationsService planningDeclarationsService)
         {
             _declarationsService = declarationsService;
             _uriService = uriService;
             _declarationsHub = declarationsHub;
             _firmDeclarationsService = firmDeclarationsService;
             _currentAccount = currentAccount;
+            _planningDeclarationsService = planningDeclarationsService;
         }
 
         [HttpGet]
@@ -47,7 +49,10 @@ namespace vezir.api.Controllers
         [HttpGet]
         public async Task<IActionResult> All2Declarations(string id)
         {
+
+           await _planningDeclarationsService.CalcPlan(1);
             await _declarationsHub.Clients.All.SendAsync("SendMessage", id);
+            
             return Ok();
         }
 
@@ -75,12 +80,14 @@ namespace vezir.api.Controllers
                 }
 
                 await _firmDeclarationsService.SaveChangesAsync();
+                
             }
             else
             {
                 return BadRequest("Boyle bir firma kayıtlı değil");
             }
 
+            await _planningDeclarationsService.CalcPlan(firmId);
             return Ok("Ok");
         }
     }

@@ -2,7 +2,7 @@ const puppeteer = require("puppeteer");
 const htmlparser2 = require("htmlparser2");
 const cheerio = require("cheerio");
 const download = require("download");
-
+const scrapedData = [];
 (async () => {
   const browser = await puppeteer.launch({
     headless: false,
@@ -49,64 +49,70 @@ const download = require("download");
   await newPage.waitForTimeout(2000);
 
   //await newPage.$eval("#sbynPDF0zkztsqt7u1wfi>img", (form) => form.click());
+  await htmlTableToData();
+  async function htmlTableToData() {
+    const data = await newPage.evaluate(() => {
+      const eTable = document.querySelectorAll(
+        "#bynList0_content>form>center:nth-child(2)>table:nth-child(2)"
+      );
+      const tds = Array.from(eTable);
+      return tds.map((item) => item.innerHTML);
+    });
 
-  const data = await newPage.evaluate(() => {
-    const eTable = document.querySelectorAll(
-      "#bynList0_content>form>center:nth-child(2)>table:nth-child(2)"
-    );
-    const tds = Array.from(eTable);
-    return tds.map((item) => item.innerHTML);
-  });
-  const scrapedData = [];
-  const dom = htmlparser2.parseDocument(data);
-  const $ = cheerio.load(dom);
-  $("tr").each((index, element) => {
-    if (index === 0) return true;
-    const tds = $(element).find("td");
-    const firmName = $(tds[3]).attr("title");
-    const pdfId = $(tds[0]).attr("id").replace("checkboxTD", "").trim();
-    const tarih = $(tds[7]).text().trim();
-    const beyannmeTipi = $(tds[1]).text().trim();
-    const vdNo = $(tds[2]).text().trim();
-    const onay = $(tds[8]).text().trim();
-    const donem = $(tds[5]).text().trim();
+    const dom = htmlparser2.parseDocument(data);
+    const $ = cheerio.load(dom);
+    $("tr").each((index, element) => {
+      if (index === 0) return true;
+      const tds = $(element).find("td");
+      const firmName = $(tds[3]).attr("title");
+      const pdfId = $(tds[0]).attr("id").replace("checkboxTD", "").trim();
+      const tarih = $(tds[7]).text().trim();
+      const beyannmeTipi = $(tds[1]).text().trim();
+      const vdNo = $(tds[2]).text().trim();
+      const onay = $(tds[8]).text().trim();
+      const donem = $(tds[5]).text().trim();
 
-    tahakkukId = "yok";
+      tahakkukId = "yok";
 
-    $(element)
-      .find("img")
-      .each((index, element) => {
-        const bakbi = $(element).attr("title");
-        if (bakbi != undefined) {
-          if (bakbi.includes("Tahakkuku")) {
-            tahakkukId = $(element)
-              .attr("onclick")
-              .replace("',false,false)", "")
-              .replace("tahakkukGoruntule('", "")
-              .replace(pdfId, "")
-              .replace("'", "")
-              .replace(",'", "")
-              .trim();
+      $(element)
+        .find("img")
+        .each((index, element) => {
+          const bakbi = $(element).attr("title");
+          if (bakbi != undefined) {
+            if (bakbi.includes("Tahakkuku")) {
+              tahakkukId = $(element)
+                .attr("onclick")
+                .replace("',false,false)", "")
+                .replace("tahakkukGoruntule('", "")
+                .replace(pdfId, "")
+                .replace("'", "")
+                .replace(",'", "")
+                .trim();
+            }
           }
-        }
-      });
+        });
 
-    if (tarih.length > 0) {
-      const tableRow = {
-        pdfId,
-        firmName,
-        tarih,
-        beyannmeTipi,
-        vdNo,
-        onay,
-        tahakkukId,
-        donem,
-      };
-      scrapedData.push(tableRow);
-    }
-  });
-  console.log(scrapedData);
+      if (tarih.length > 0) {
+        const tableRow = {
+          pdfId,
+          firmName,
+          tarih,
+          beyannmeTipi,
+          vdNo,
+          onay,
+          tahakkukId,
+          donem,
+        };
+        scrapedData.push(tableRow);
+      }
+    });
+    console.log(scrapedData);
+    return "ok";
+  }
 
+  //table ayıkla
+
+  /* Burası Download kısmı
   var Url = new URL(newPage.url());
 
   var token = Url.searchParams.get("TOKEN");
@@ -121,6 +127,22 @@ const download = require("download");
   (async () => {
     await download(ikinciUrl.href, "./pdf");
   })();
+
+  /*
+
+
+
+
+#bynList0_content > form > center:nth-child(2) > table:nth-child(1) > tbody > tr:nth-child(2) > td:nth-child(4) > input[type=button]
+#bynList1_content > form > center:nth-child(2) > table:nth-child(1) > tbody > tr:nth-child(2) > td:nth-child(4) > input[type=button]
+#bynList1_content > form > center:nth-child(2) > table:nth-child(1) > tbody > tr:nth-child(2) > td:nth-child(4) > input[type=button]
+
+
+
+
+
+
+*/
 
   // const author = await page.$eval(
   //   "#bynList0_content>form>center:nth-child(2)>table:nth-child(2)",

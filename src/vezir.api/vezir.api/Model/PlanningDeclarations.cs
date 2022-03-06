@@ -9,4 +9,5 @@ public class PlanningDeclarations
     [Required] public int DeclarationsId { get; set; }
     [Required] public string Period { get; set; }
     [Required] public DateTime CreateDate { get; set; }
+    [Required] public DateTime LastPaymentDate { get; set; }
 }

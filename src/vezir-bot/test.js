@@ -4,6 +4,8 @@ const cheerio = require("cheerio");
 const path = require("path");
 const download = require("download");
 
+const scrapedData = [];
+
 (async () => {
   const browser = await puppeteer.launch({
     headless: false,
@@ -15,68 +17,70 @@ const download = require("download");
   await page.goto("http://127.0.0.1/liste.html");
   await page.waitForTimeout(1000);
 
-  const data = await page.evaluate(() => {
-    const eTable = document.querySelectorAll("body>table>tbody");
-    const tds = Array.from(eTable);
-    return tds.map((item) => item.innerHTML);
+  await aaa().then((value) => {
+    console.log(value);
   });
-  //console.log(data[7]);
 
-  const scrapedData = [];
-  const dom = htmlparser2.parseDocument(data);
+  async function aaa() {
+    const data = await page.evaluate(() => {
+      const eTable = document.querySelectorAll("body>table>tbody");
+      const tds = Array.from(eTable);
+      return tds.map((item) => item.innerHTML);
+    });
+    //console.log(data[7]);
 
-  //const dom1 = cheerio.load(dom);
-  const $ = cheerio.load(dom);
-  $("tr").each((index, element) => {
-    if (index === 0) return true;
-    const tds = $(element).find("td");
-    const firmName = $(tds[3]).attr("title");
-    const pdfId = $(tds[0]).attr("id").replace("checkboxTD", "").trim();
-    const tarih = $(tds[7]).text().trim();
-    const beyannmeTipi = $(tds[1]).text().trim();
-    const vdNo = $(tds[2]).text().trim();
-    const onay = $(tds[8]).text().trim();
-    const donem = $(tds[5]).text().trim();
-    tahakkukId = "yok";
+    const dom = htmlparser2.parseDocument(data);
 
-    $(element)
-      .find("img")
-      .each((index, element) => {
-        const bakbi = $(element).attr("title");
-        if (bakbi != undefined) {
-          if (bakbi.includes("Tahakkuku")) {
-            tahakkukId = $(element)
-              .attr("onclick")
-              .replace("',false,false)", "")
-              .replace("tahakkukGoruntule('", "")
-              .replace(pdfId, "")
-              .replace("'", "")
-              .replace(",'", "")
-              .trim();
+    //const dom1 = cheerio.load(dom);
+    const $ = cheerio.load(dom);
+    $("tr").each((index, element) => {
+      if (index === 0) return true;
+      const tds = $(element).find("td");
+      const firmName = $(tds[3]).attr("title");
+      const pdfId = $(tds[0]).attr("id").replace("checkboxTD", "").trim();
+      const tarih = $(tds[7]).text().trim();
+      const beyannmeTipi = $(tds[1]).text().trim();
+      const vdNo = $(tds[2]).text().trim();
+      const onay = $(tds[8]).text().trim();
+      const donem = $(tds[5]).text().trim();
+      tahakkukId = "yok";
+
+      $(element)
+        .find("img")
+        .each((index, element) => {
+          const bakbi = $(element).attr("title");
+          if (bakbi != undefined) {
+            if (bakbi.includes("Tahakkuku")) {
+              tahakkukId = $(element)
+                .attr("onclick")
+                .replace("',false,false)", "")
+                .replace("tahakkukGoruntule('", "")
+                .replace(pdfId, "")
+                .replace("'", "")
+                .replace(",'", "")
+                .trim();
+            }
           }
-        }
-      });
-    //const tahakkukId = $(tds[8]).find("td")[2].children[1].attribs.onclick;
+        });
+      //const tahakkukId = $(tds[8]).find("td")[2].children[1].attribs.onclick;
 
-    if (tarih.length > 0) {
-      const tableRow = {
-        pdfId,
-        firmName,
-        tarih,
-        beyannmeTipi,
-        vdNo,
-        onay,
-        tahakkukId,
-        donem,
-      };
-      scrapedData.push(tableRow);
-    }
-  });
-  console.log(scrapedData);
-
-  await page.evaluate(() => {
-    // test();
-  });
+      if (tarih.length > 0) {
+        const tableRow = {
+          pdfId,
+          firmName,
+          tarih,
+          beyannmeTipi,
+          vdNo,
+          onay,
+          tahakkukId,
+          donem,
+        };
+        scrapedData.push(tableRow);
+      }
+    });
+    console.log(scrapedData);
+    return "ok";
+  }
 
   // Download the file
   (async () => {
