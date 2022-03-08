@@ -11,129 +11,31 @@ const scrapedData = [];
   });
   const page = await browser.newPage();
   await page.setViewport({ width: 0, height: 0 });
-  await page.goto("https://ebeyanname.gib.gov.tr/", {
-    waitUntil: "networkidle2",
-  });
-  await page.$eval("#buton>img", (form) => form.click());
-
-  const newPagePromise = new Promise((x) => page.once("popup", x));
-  const newPage = await newPagePromise;
-  await newPage.setViewport({ width: 0, height: 0 });
-
-  const userCode = await newPage.waitForXPath(
-    "/html/body/div/div/table[1]/tbody/tr[2]/td/div/form/table/tbody/tr[1]/td[3]/input"
+  await page.goto(
+    "https://bireysel.ziraatbank.com.tr/Transactions/Login/FirstLogin.aspx?customertype=rtl",
+    {
+      waitUntil: "networkidle2",
+    }
   );
 
-  await userCode.type("25903042");
-
-  const password1 = await newPage.waitForXPath(
-    "/html/body/div/div/table[1]/tbody/tr[2]/td/div/form/table/tbody/tr[2]/td[3]/input"
-  );
-  await password1.type("maliye");
-  const password2 = await newPage.waitForXPath(
-    "/html/body/div/div/table[1]/tbody/tr[2]/td/div/form/table/tbody/tr[3]/td[3]/input"
+  const username = await page.waitForXPath(
+    "/html/body/form/div[3]/div[2]/div/div/div[1]/div/div[1]/div[2]/div[1]/div[1]/input[2]"
   );
 
-  await password2.type("212121");
+  await username.type("60925152178");
 
-  await newPage.keyboard.press("Enter");
-  await newPage.waitForTimeout(1000);
+  const userpass = await page.waitForXPath(
+    "/html/body/form/div[3]/div[2]/div/div/div[1]/div/div[1]/div[2]/div[1]/div[3]/input[1]"
+  );
 
-  await newPage.$eval(
-    "#page>table>tbody>tr>td>div:nth-child(6)>div>table>tbody>tr>td:nth-child(7)>span",
+  await userpass.type("379186");
+
+  await page.keyboard.press("Enter");
+  await page.waitForTimeout(10000);
+  await page.$eval(
+    "#menu>div.menu-wrap>div.MenuScrollEvent>div>div.top>ul>li:nth-child(4)>div>div>div>ul>li:nth-child(9)>div>a",
     (form) => form.click()
   );
-
-  await newPage.waitForTimeout(2000);
-  await newPage.$eval("#sorgulaButon", (form) => form.click());
-  await newPage.waitForTimeout(2000);
-
-  const pageSize = await pageCalc(newPage);
-  console.log(pageSize);
-  await htmlTableToData(newPage);
-  await newPage.waitForTimeout(2000);
-
-  for (let i = 1; i < pageSize; i++) {
-    await newPage.$eval(
-      "#bynList0_content>form>center:nth-child(2)>table:nth-child(1)>tbody>tr:nth-child(2)>td:nth-child(4)>input[type=button]",
-      (form) => form.click()
-    );
-    await htmlTableToData(newPage);
-  }
-
-  async function htmlTableToData(tablePage) {
-    await tablePage.waitForTimeout(2000);
-    console.log("Geldi");
-    const data = await tablePage.evaluate(() => {
-      const eTable = document.querySelectorAll(
-        "#bynList0_content>form>center:nth-child(2)>table:nth-child(2)"
-      );
-      const tds = Array.from(eTable);
-      return tds.map((item) => item.innerHTML);
-    });
-
-    const dom = htmlparser2.parseDocument(data);
-    const $ = cheerio.load(dom);
-    $("tr").each((index, element) => {
-      if (index === 0) return true;
-      const tds = $(element).find("td");
-      // const firmName = $(tds[3]).attr("title");
-      const gibDeclarationId = $(tds[0])
-        .attr("id")
-        .replace("checkboxTD", "")
-        .trim();
-      const gibDate = $(tds[7]).text().trim();
-      const gibDeclarationType = $(tds[1]).text().trim();
-      const gibTaxNo = $(tds[2]).text().trim();
-      const gibApproval = $(tds[8]).text().trim();
-      const gibPeriod = $(tds[5]).text().trim();
-      gibAssessmentId = "yok";
-
-      $(element)
-        .find("img")
-        .each((index, element) => {
-          const bakbi = $(element).attr("title");
-          if (bakbi != undefined) {
-            if (bakbi.includes("Tahakkuku")) {
-              gibAssessmentId = $(element)
-                .attr("onclick")
-                .replace("',false,false)", "")
-                .replace("tahakkukGoruntule('", "")
-                .replace(gibDeclarationId, "")
-                .replace("'", "")
-                .replace(",'", "")
-                .trim();
-            }
-          }
-        });
-
-      if (gibDate.length > 0) {
-        const tableRow = {
-          gibDeclarationId,
-          gibDate,
-          gibDeclarationType,
-          gibTaxNo,
-          gibApproval,
-          gibAssessmentId,
-          gibPeriod,
-        };
-        scrapedData.push(tableRow);
-      }
-    });
-    return "ok";
-  }
-  console.log(scrapedData);
-
-  async function pageCalc(pagingItem) {
-    const text = await pagingItem.$eval(
-      "#bynList0_content>form>center:nth-child(2)>table:nth-child(1)>tbody>tr:nth-child(2)>td:nth-child(3)>b>font",
-      (element) => element.textContent
-    );
-    var pageItem = text.split("/")[1];
-    var result = Math.ceil(pageItem / 25);
-    //console.log(result);
-    return result;
-  }
 
   //table ayıkla
 

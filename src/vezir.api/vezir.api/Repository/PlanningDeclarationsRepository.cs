@@ -29,8 +29,9 @@ public class PlanningDeclarationsRepository : GenericRepository<PlanningDeclarat
                     var planDate = item.CreateDate.AddMonths(1);
                     _logger.LogInformation("Aylık");
 
-                    var periodMonth = $"{planDate.ToString("MM")}/{planDate.Year}-{planDate.ToString("MM")}/{planDate.Year}";
-                        var itemPlanDeclarations = new PlanningDeclarations
+                    var periodMonth =
+                        $"{planDate.ToString("MM")}/{planDate.Year}-{planDate.ToString("MM")}/{planDate.Year}";
+                    var itemPlanDeclarations = new PlanningDeclarations
                     {
                         CreateDate = DateTime.Now,
                         FirmId = item.FirmId,
@@ -52,23 +53,25 @@ public class PlanningDeclarationsRepository : GenericRepository<PlanningDeclarat
                     var firstRangePeriod = new DateTime(item.CreateDate.Year, Convert.ToInt32(firstMonthPeriod), 1);
                     var lastRangePeriod = new DateTime(item.CreateDate.Year, Convert.ToInt32(lastMonthPeriod), 1);
 
-                     var period3Month = $"{firstRangePeriod.ToString("MM")}/{firstRangePeriod.Year}-{lastRangePeriod.ToString("MM")}/{lastRangePeriod.Year}";
+                    var period3Month =
+                        $"{firstRangePeriod.ToString("MM")}/{firstRangePeriod.Year}-{lastRangePeriod.ToString("MM")}/{lastRangePeriod.Year}";
                     _logger.LogInformation(period3Month);
-                   
+
                     _logger.LogInformation("3 Aylık " + whoPeriod + " Dönem");
-                    
-                   
+
+
                     var itemPlanDeclarations1 = new PlanningDeclarations
                     {
                         CreateDate = DateTime.Now,
                         FirmId = item.FirmId,
                         DeclarationsId = item.DeclarationsId,
                         Period = period3Month,
-                        LastPaymentDate = new DateTime(lastRangePeriod.Year, lastRangePeriod.Month, declaration.LastDay).AddMonths(1)
+                        LastPaymentDate = new DateTime(lastRangePeriod.Year, lastRangePeriod.Month, declaration.LastDay)
+                            .AddMonths(1)
                     };
                     await Context.PlanningDeclarations.AddAsync(itemPlanDeclarations1);
                     await SaveChangesAsync();
-                    
+
                     break;
             }
         }
