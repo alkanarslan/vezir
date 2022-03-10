@@ -15,6 +15,11 @@ public class DeclarationHub : Hub
         Console.WriteLine(message);
         await Clients.All.SendAsync("SendMessage",  message);
     }
+    public async Task GibScan(string message)
+    {
+        Console.WriteLine(message);
+        await Clients.All.SendAsync("GibScan",  message);
+    }
     public override async Task OnConnectedAsync()
     {
         await Clients.Caller.SendAsync("GetConnectionId", this.Context.ConnectionId);

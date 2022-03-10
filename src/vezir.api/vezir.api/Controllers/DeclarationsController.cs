@@ -50,8 +50,8 @@ namespace vezir.api.Controllers
         public async Task<IActionResult> All2Declarations(string id)
         {
 
-           await _planningDeclarationsService.CalcPlan(1);
-            await _declarationsHub.Clients.All.SendAsync("SendMessage", id);
+        //   await _planningDeclarationsService.CalcPlan(1);
+            await _declarationsHub.Clients.All.SendAsync("GibScan", id);
             
             return Ok();
         }

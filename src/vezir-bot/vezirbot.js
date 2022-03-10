@@ -9,6 +9,13 @@ const scrapedData = [];
     executablePath:
       "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser",
   });
+
+  /*
+  const browser = await puppeteer.connect({
+    browserWSEndpoint: "ws://localhost:3000",
+  });
+
+  */
   const page = await browser.newPage();
   await page.setViewport({ width: 0, height: 0 });
   await page.goto("https://ebeyanname.gib.gov.tr/", {
