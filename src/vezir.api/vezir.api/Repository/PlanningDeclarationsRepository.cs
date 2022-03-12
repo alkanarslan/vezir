@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using vezir.api.Interface;
 using vezir.api.Model;
 using vezir.api.GenericRepository;
+using vezir.api.ResponseModel;
 
 namespace vezir.api.Repository;
 
@@ -24,8 +25,6 @@ public class PlanningDeclarationsRepository : GenericRepository<PlanningDeclarat
             switch (declaration.TimeType)
             {
                 case 24:
-                    //bu case 24 olacak unutma !!
-                    //Şuanda gelecek ayın planını yapıyor odemesinide 1 sonraya kaydediyor.
                     var planDate = item.CreateDate.AddMonths(1);
                     _logger.LogInformation("Aylık");
 
@@ -75,5 +74,27 @@ public class PlanningDeclarationsRepository : GenericRepository<PlanningDeclarat
                     break;
             }
         }
+    }
+
+    public async Task<List<FirmOfDeclarations>> GetPlanResultService(int firmId)
+    {
+        var result = await (from p in Context.PlanningDeclarations
+            join lk in Context.Declarations on p.DeclarationsId equals  lk.Id
+            join pv in Context.PlanningDeclarationsVerification on p.Id equals pv.PlanningDeclarationsId into dept from pvd in dept.DefaultIfEmpty()
+            where p.FirmId == firmId
+            
+            select new FirmOfDeclarations
+            {
+                Period = p.Period,
+                DeclarationId = p.DeclarationsId,
+                Approval = pvd.Approval == null ? 188 : pvd.Approval,
+                DeclarationComment = $"{lk.Name}-{lk.Code}",
+                LastPaymentDate = p.LastPaymentDate
+                
+
+            }).ToListAsync();
+        
+        
+        return result;
     }
 }

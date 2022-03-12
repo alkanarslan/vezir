@@ -20,16 +20,33 @@
                 align="left"
                 narrow-indicator
               >
-                <q-tab name="mails" icon="mail" label="Beyanname" />
-                <q-tab name="firms" icon="people" label="Firma Bilgileri" />
-                <q-tab name="alarms" icon="people" label="İletişim Bilgileri" />
+                <q-tab
+                  name="declarationNotify"
+                  icon="assessment"
+                  label="Beyanname Bildirimleri"
+                />
+                <q-tab name="firms" icon="domain" label="Firma Bilgileri" />
+                <q-tab
+                  name="alarms"
+                  icon="settings_accessibility"
+                  label="İletişim Bilgileri"
+                />
                 <q-tab name="movies" icon="alarm" label="Bildirimler" />
+                <q-tab
+                  name="mails"
+                  icon="settings"
+                  label="Beyanname Ayarları"
+                />
               </q-tabs>
               <q-separator />
               <q-tab-panels v-model="tab" animated>
+                <q-tab-panel name="declarationNotify">
+                  <div class="text-h6">Firma Bilgileri</div>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </q-tab-panel>
                 <q-tab-panel name="mails">
-                  <div class="text-h6">Beyanname</div>
-                  {{ declarationsSelectValue }}
+                  <div class="text-h6">Beyanname Listesi</div>
+
                   <form @submit.prevent="simulateSubmit" class="q-pa-md">
                     <div class="q-pa-md">
                       <q-select
@@ -70,6 +87,34 @@
                       </div>
                     </div>
                   </form>
+
+                  <div class="q-pa-md">
+                    <q-table
+                      color="primary"
+                      :rows="declarationTableRows"
+                      :columns="declarationTableColumns"
+                      row-key="id"
+                      separator="cell"
+                    >
+                      <template v-slot:body-cell-action="props">
+                        <q-td :props="props">
+                          <q-btn
+                            color="negative"
+                            icon-right="clear"
+                            no-caps
+                            flat
+                            dense
+                            @click="
+                              deleteval(
+                                declarationTableRows.indexOf(props.row),
+                                props.row.id
+                              )
+                            "
+                          />
+                        </q-td>
+                      </template>
+                    </q-table>
+                  </div>
                 </q-tab-panel>
                 <q-tab-panel name="firms">
                   <div class="text-h6">Firma Bilgileri</div>
@@ -102,13 +147,32 @@ const declarationsOptions = [];
 export default {
   setup() {
     const restdata = ref([]);
+    const declarationTableRows = ref([]);
+
     const declarationsSelectValue = ref(null);
     const declarationsValue = ref(declarationsOptions);
     const $q = useQuasar();
     const route = useRoute();
     const currentRouteID = route.params.id;
-    const submitting = ref(false);
+    const declarationTableColumns = [
+      { name: "id", label: "ID", field: "id", style: "width: 10px" },
+      { name: "name", label: "Açıklama", align: "left", field: "name" },
+      { name: "code", label: "Kod", field: "code", style: "width: 10px" },
+      {
+        name: "timeValue",
+        label: "Zaman Tanımı",
+        field: "timeValue",
+        style: "width: 10px",
+      },
+      {
+        name: "action",
+        align: "right",
+        field: "action",
+        style: "width: 10px",
+      },
+    ];
 
+    const submitting = ref(false);
     const fetchData = (id = 0) => {
       api
         .get("/api/CurrentAccount", {
@@ -129,9 +193,28 @@ export default {
           console.log(err);
         });
     };
-
     fetchData(currentRouteID);
+    const declarationTableRowsData = (id = 0) => {
+      api
+        .get("/api/declarations/declarations-firm-list", {
+          params: { firmId: id },
+        })
+        .then((res) => {
+          declarationTableRows.value = res.data;
+        })
+        .finally(() => {})
+        .catch((err) => {
+          $q.notify({
+            type: "negative",
+            message: err.message,
+            position: "center",
+          });
+          // loading.value = true;
 
+          console.log(err);
+        });
+    };
+    declarationTableRowsData(currentRouteID);
     const fetchDataDeclarations = (page = 1) => {
       api
         .get("/api/Declarations", {
@@ -170,6 +253,7 @@ export default {
         .finally(() => {
           declarationsSelectValue.value = null;
           submitting.value = false;
+          declarationTableRowsData(currentRouteID);
         })
         .catch((err) => {
           $q.notify({
@@ -179,7 +263,6 @@ export default {
           });
         });
     }
-
     fetchDataDeclarations();
     return {
       declarationsValue,
@@ -188,12 +271,18 @@ export default {
       tab: ref("mails"),
       simulateSubmit,
       submitting,
+      declarationTableColumns,
+      declarationTableRows,
 
+      deleteval(index, rowid) {
+        console.log(rowid);
+        this.declarationTableRows.splice(index, 1);
+        console.log(declarationTableRows.value);
+      },
       filterFn(name, update, abort) {
         update(() => {
           let locales = ["tr", "TR", "tr-TR", "tr-u-co-search", "tr-x-turkish"];
           const needle = name.toLowerCase(locales);
-          console.log(needle);
           declarationsValue.value = declarationsOptions.filter(
             (v) => v.name.toLowerCase(locales).indexOf(needle) > -1
           );

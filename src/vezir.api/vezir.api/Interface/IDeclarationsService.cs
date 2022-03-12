@@ -9,4 +9,8 @@ namespace vezir.api.Interface;
 public interface IDeclarationsService : IGenericRepository<Declarations>
 {
     Task<List<DeclarationsResponseModel>> DeclarationsFilterListAsync(PaginationFilter paginationFilter);
+    
+    Task<List<DeclarationsResponseModel>> DeclarationsFirmListAsync(int firmId);
+    
+    
 }

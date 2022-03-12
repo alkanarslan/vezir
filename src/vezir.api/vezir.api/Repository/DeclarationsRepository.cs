@@ -42,4 +42,23 @@ public class DeclarationsRepository : GenericRepository<Declarations>, IDeclarat
 
         return saaa;
     }
+
+    public Task<List<DeclarationsResponseModel>> DeclarationsFirmListAsync(int firmId)
+    {
+        var result =( from p in Context.FirmDeclarations
+            join dc in Context.Declarations on p.DeclarationsId equals dc.Id
+            join lk in Context.Lookup on dc.TimeType equals lk.LookupID
+            where p.FirmId == firmId
+            select new DeclarationsResponseModel
+            {
+                Id = p.Id,
+                Name = dc.Name,
+                TimeType = dc.TimeType,
+                Code = dc.Code,
+                TimeValue = lk.Name,
+                LastDay = dc.LastDay
+            }).ToListAsync();
+
+        return result;
+    }
 }

@@ -4,16 +4,12 @@ using System.Security.Claims;
 
 public class BaseApiController : ControllerBase
 {
-    protected int UserId => int.Parse(FindClaim(ClaimTypes.NameIdentifier));
-    private string FindClaim(string claimName)
+    protected int UserId => int.Parse(FindClaim(ClaimTypes.NameIdentifier) ?? string.Empty);
+    private string? FindClaim(string claimName)
     {
         var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
         var claim = claimsIdentity?.FindFirst(claimName);
  
-        if (claim == null)
-        {
-            return null;
-        }
-        return claim.Value;
+        return claim?.Value;
     }
 }
