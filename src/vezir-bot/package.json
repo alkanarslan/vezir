@@ -3,6 +3,7 @@
     "@microsoft/signalr": "^6.0.2",
     "amqplib": "^0.8.0",
     "axios": "^0.26.0",
+    "bwip-js": "^3.0.4",
     "cheerio": "^1.0.0-rc.10",
     "css-select": "^4.2.1",
     "download": "^8.0.0",
