@@ -42,6 +42,9 @@
               <q-tab-panels v-model="tab" animated>
                 <q-tab-panel name="declarationNotify">
                   <div class="text-h6">Firma Bilgileri</div>
+                  <FirmOfDeclaration
+                    :firmId="currentRouteID"
+                  ></FirmOfDeclaration>
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 </q-tab-panel>
                 <q-tab-panel name="mails">
@@ -87,7 +90,6 @@
                       </div>
                     </div>
                   </form>
-
                   <div class="q-pa-md">
                     <q-table
                       color="primary"
@@ -143,12 +145,14 @@ import { api } from "boot/axios";
 import { useQuasar } from "quasar";
 import { useRoute } from "vue-router";
 import { HubConnectionBuilder } from "@microsoft/signalr";
+import FirmOfDeclaration from "../components/FirmOfDeclaration.vue";
+
 const declarationsOptions = [];
 export default {
+  name: "CurrentAccount",
   setup() {
     const restdata = ref([]);
     const declarationTableRows = ref([]);
-
     const declarationsSelectValue = ref(null);
     const declarationsValue = ref(declarationsOptions);
     const $q = useQuasar();
@@ -171,7 +175,6 @@ export default {
         style: "width: 10px",
       },
     ];
-
     const submitting = ref(false);
     const fetchData = (id = 0) => {
       api
@@ -189,7 +192,6 @@ export default {
             position: "center",
           });
           // loading.value = true;
-
           console.log(err);
         });
     };
@@ -210,7 +212,6 @@ export default {
             position: "center",
           });
           // loading.value = true;
-
           console.log(err);
         });
     };
@@ -265,15 +266,15 @@ export default {
     }
     fetchDataDeclarations();
     return {
+      currentRouteID,
       declarationsValue,
       declarationsSelectValue,
       restdata,
-      tab: ref("mails"),
+      tab: ref("declarationNotify"),
       simulateSubmit,
       submitting,
       declarationTableColumns,
       declarationTableRows,
-
       deleteval(index, rowid) {
         console.log(rowid);
         this.declarationTableRows.splice(index, 1);
@@ -290,5 +291,6 @@ export default {
       },
     };
   },
+  components: { FirmOfDeclaration },
 };
 </script>
