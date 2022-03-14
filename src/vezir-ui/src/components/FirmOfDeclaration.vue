@@ -1,6 +1,5 @@
 <template>
   <div class="q-pa-md">
-    <span>{{ firmId }}</span>
     <q-table
       color="primary"
       :rows="firmDeclarationTableRows"
@@ -44,12 +43,17 @@ export default {
     const firmDeclarationTableColumns = [
       { name: "declarationId", label: "ID", field: "id", style: "width: 10px" },
       {
-        name: "declarationComment",
-        label: "Açıklama",
+        label: "Beyanname Türü",
         align: "left",
         field: "declarationComment",
       },
-      { name: "period", label: "Kod", field: "period", style: "width: 10px" },
+
+      { label: "Dönem", field: "period", style: "width: 10px" },
+      {
+        label: "Son Ödeme Tarihi",
+        align: "left",
+        field: "lastPaymentDate",
+      },
       {
         name: "approval",
         label: "Zaman Tanımı",

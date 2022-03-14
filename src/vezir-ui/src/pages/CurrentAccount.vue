@@ -45,7 +45,6 @@
                   <FirmOfDeclaration
                     :firmId="currentRouteID"
                   ></FirmOfDeclaration>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 </q-tab-panel>
                 <q-tab-panel name="mails">
                   <div class="text-h6">Beyanname Listesi</div>
