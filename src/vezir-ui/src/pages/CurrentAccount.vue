@@ -39,7 +39,7 @@
                 />
               </q-tabs>
               <q-separator />
-              <q-tab-panels v-model="tab" animated>
+              <q-tab-panels v-model="tab" animated keep-alive>
                 <q-tab-panel name="declarationNotify">
                   <div class="text-h6">Firma Bilgileri</div>
                   <FirmOfDeclaration
@@ -149,6 +149,7 @@ import FirmOfDeclaration from "../components/FirmOfDeclaration.vue";
 const declarationsOptions = [];
 export default {
   name: "CurrentAccount",
+
   setup() {
     const restdata = ref([]);
     const declarationTableRows = ref([]);

@@ -9,7 +9,6 @@ namespace vezir.api.Repository;
 public class PlanningDeclarationsRepository : GenericRepository<PlanningDeclarations>, IPlanningDeclarationsService
 {
     private readonly ILogger<PlanningDeclarationsRepository> _logger;
-
     public PlanningDeclarationsRepository(VezirApiContext context, ILogger<PlanningDeclarationsRepository> logger) :
         base(context)
     {
@@ -76,22 +75,22 @@ public class PlanningDeclarationsRepository : GenericRepository<PlanningDeclarat
         }
     }
 
-    public async Task<List<FirmOfDeclarations>> GetPlanResultService(int firmId)
+    public async Task<List<DeclarationNotificationsRequestModel>> GetPlanResultService(int firmId)
     {
         var result = await (from p in Context.PlanningDeclarations
             join lk in Context.Declarations on p.DeclarationsId equals  lk.Id
+            join look in Context.Lookup on lk.TimeType equals look.LookupID
             join pv in Context.PlanningDeclarationsVerification on p.Id equals pv.PlanningDeclarationsId into dept from pvd in dept.DefaultIfEmpty()
             where p.FirmId == firmId
             
-            select new FirmOfDeclarations
+            select new DeclarationNotificationsRequestModel
             {
                 Period = p.Period,
-                DeclarationId = p.DeclarationsId,
+                PlanningDeclarationsId = p.Id,
                 Approval = pvd.Approval == null ? 188 : pvd.Approval,
-                DeclarationComment = $"{lk.Name}-{lk.Code}",
-                LastPaymentDate = p.LastPaymentDate
-                
-
+                DeclarationComment = $"{lk.Code} ( {look.Name} )",
+                LastPaymentDate = p.LastPaymentDate.ToString("dd-MM-yyyy"),
+                VerificationDate = pvd.VerificationDate == null ? "Oluşmamış" : pvd.VerificationDate.ToString("dd-MM-yyyy")
             }).ToListAsync();
         
         
