@@ -13,6 +13,7 @@
     "pdf-parse": "^1.1.1",
     "pdfkit": "^0.13.0",
     "puppeteer": "^13.4.0",
+    "puppeteer-get-iframe": "^1.0.0",
     "puppeteer-table-parser": "^1.4.0",
     "whatsapp-web.js": "^1.16.3"
   }

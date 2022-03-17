@@ -99,6 +99,9 @@
                     >
                       <template v-slot:body-cell-action="props">
                         <q-td :props="props">
+                          <DeclarationNotify
+                            :id="props.row.id"
+                          ></DeclarationNotify>
                           <q-btn
                             color="negative"
                             icon-right="clear"
@@ -145,6 +148,7 @@ import { useQuasar } from "quasar";
 import { useRoute } from "vue-router";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import FirmOfDeclaration from "../components/FirmOfDeclaration.vue";
+import DeclarationNotify from "src/components/DeclarationNotify.vue";
 
 const declarationsOptions = [];
 export default {
@@ -291,6 +295,6 @@ export default {
       },
     };
   },
-  components: { FirmOfDeclaration },
+  components: { FirmOfDeclaration, DeclarationNotify },
 };
 </script>

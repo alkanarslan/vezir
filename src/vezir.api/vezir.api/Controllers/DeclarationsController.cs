@@ -56,6 +56,24 @@ namespace vezir.api.Controllers
 
             return Ok();
         }
+        
+        [Route("api/Declarations/gokhan")]
+        [HttpGet]
+        public async Task<IActionResult> All2Declarations1()
+        {
+            //   await _planningDeclarationsService.CalcPlan(1);
+          Console.WriteLine("Gokhandan");
+            return Ok("gokhan");
+        }
+        [Route("api/Declarations/alkan")]
+        [HttpGet]
+        public async Task<IActionResult> All2Declarations2(int firmId)
+        {
+            
+            await _planningDeclarationsService.CalcPlan(firmId);
+            Console.WriteLine("Alkan dan");
+            return Ok("alkan");
+        }
 
         [Route("api/declarations/firm-assign")]
         [HttpPost]
@@ -77,7 +95,6 @@ namespace vezir.api.Controllers
             }
 
             await _firmDeclarationsService.SaveChangesAsync();
-            await _planningDeclarationsService.CalcPlan(firmId);
             return Ok("Ok");
         }
 
@@ -85,7 +102,6 @@ namespace vezir.api.Controllers
         [HttpGet]
         public async Task<IActionResult> DeclarationsOfFirm(int firmId)
         {
-          
             var result = await _planningDeclarationsService.GetPlanResultService(firmId);
             return Ok(result);
         }

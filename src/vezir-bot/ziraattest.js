@@ -2,39 +2,24 @@ const puppeteer = require("puppeteer");
 const htmlparser2 = require("htmlparser2");
 const cheerio = require("cheerio");
 const download = require("download");
+
 const scrapedData = [];
 (async () => {
   const browser = await puppeteer.launch({
+    args: ["--disable-features=site-per-process"],
     headless: false,
     executablePath:
       "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser",
   });
   const page = await browser.newPage();
   await page.setViewport({ width: 0, height: 0 });
-  await page.goto(
-    "https://bireysel.ziraatbank.com.tr/Transactions/Login/FirstLogin.aspx?customertype=rtl",
-    {
-      waitUntil: "networkidle2",
-    }
-  );
+  await page.goto("http://127.0.0.1/bos.html", {
+    waitUntil: "networkidle2",
+  });
 
-  const username = await page.waitForXPath(
-    "/html/body/form/div[3]/div[2]/div/div/div[1]/div/div[1]/div[2]/div[1]/div[1]/input[2]"
-  );
-
-  await username.type("60925152178");
-
-  const userpass = await page.waitForXPath(
-    "/html/body/form/div[3]/div[2]/div/div/div[1]/div/div[1]/div[2]/div[1]/div[3]/input[1]"
-  );
-
-  await userpass.type("379186");
-
-  await page.keyboard.press("Enter");
-
-  await page.waitForTimeout(5000);
-
+  console.log("waiting for iframe with form to be ready.");
   await page.waitForSelector("iframe");
+  console.log("iframe is ready. Loading iframe content");
 
   const elementHandle = await page.$('iframe[src="liste.html"]');
   const frame = await elementHandle.contentFrame();

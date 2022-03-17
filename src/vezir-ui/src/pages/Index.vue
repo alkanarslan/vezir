@@ -80,7 +80,7 @@ export default defineComponent({
 
     $q = useQuasar();
     const connection = new HubConnectionBuilder()
-      .withUrl("http://localhost:5092/vezirhub")
+      .withUrl("/api/vezirhub")
       .withAutomaticReconnect()
       .build();
 
