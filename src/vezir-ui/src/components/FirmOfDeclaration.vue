@@ -26,13 +26,13 @@
       </template>
       <template v-slot:body-cell-approval="props">
         <q-td :props="props">
-          <span v-if="props.row.approval == 0">
+          <span v-if="props.row.approval === 0">
             <q-badge color="red" label="Onaylandı"
           /></span>
-          <span v-if="props.row.approval == 1">
+          <span v-if="props.row.approval === 1">
             <q-badge color="secondary" label="İptal"
           /></span>
-          <span v-if="props.row.approval == 188">
+          <span v-if="props.row.approval === 188">
             <q-badge color="primary" label="Gib Bekleniyor"
           /></span>
         </q-td>

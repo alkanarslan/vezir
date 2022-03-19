@@ -5,6 +5,7 @@ using vezir.api.Helper;
 using vezir.api.Hubs;
 using vezir.api.Interface;
 using vezir.api.Model;
+using vezir.api.ResponseModel;
 
 namespace vezir.api.Controllers
 {
@@ -57,22 +58,25 @@ namespace vezir.api.Controllers
             return Ok();
         }
         
-        [Route("api/Declarations/gokhan")]
-        [HttpGet]
-        public async Task<IActionResult> All2Declarations1()
+        [Route("api/save/call")]
+
+        [HttpPost]
+        public async Task<IActionResult> All2Declarations1(vodia fok)
         {
             //   await _planningDeclarationsService.CalcPlan(1);
+            
+          Console.WriteLine(fok);
           Console.WriteLine("Gokhandan");
             return Ok("gokhan");
         }
-        [Route("api/Declarations/alkan")]
+        [Route("api/save/call")]
         [HttpGet]
-        public async Task<IActionResult> All2Declarations2(int firmId)
+        public async Task<IActionResult> All2Declarations2(string from, string callid)
         {
             
-            await _planningDeclarationsService.CalcPlan(firmId);
-            Console.WriteLine("Alkan dan");
-            return Ok("alkan");
+          
+            Console.WriteLine(from+ callid);
+            return Ok($"{ from} -  {callid}");
         }
 
         [Route("api/declarations/firm-assign")]

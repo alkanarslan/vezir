@@ -12,7 +12,7 @@
           dark
         />
         <div>
-          <img src="~assets/vezir-logo-black.svg" style="width: 120px" />
+          <img src="~assets/vezir-logo-black.svg" style="width: 120px"  alt=""/>
         </div>
 
         <q-btn flat no-caps no-wrap class="q-ml-xs" v-if="$q.screen.gt.xs">
@@ -188,7 +188,7 @@ import { fabYoutube } from "@quasar/extras/fontawesome-v5";
 import { mapGetters } from "vuex";
 
 export default {
-  name: "MyLayout",
+  name: "vezir_layout",
 
   setup() {
     const leftDrawerOpen = ref(false);

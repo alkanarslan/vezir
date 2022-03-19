@@ -36,12 +36,20 @@ const scrapedData = [];
 
   await page.waitForSelector("iframe");
 
-  const elementHandle = await page.$('iframe[src="liste.html"]');
+  const elementHandle = await page.$('iframe[src="/NavigationController.aspx?page=Dashboard"]');
   const frame = await elementHandle.contentFrame();
 
+  await page.waitForTimeout(1000);
+
+  await frame.$eval(
+      "#menu>div.menu-wrap>div.MenuScrollEvent>div>div.top>ul>li:nth-child(4)>div>div>div>ul>li:nth-child(9)>div>a",
+      (form) => form.click()
+  );
+/*
   const text = await frame.$eval(
     "body>table>tbody>tr:nth-child(1)>th:nth-child(2)",
     (element) => element.textContent
   );
   console.log(text);
+*/
 })();
