@@ -5,8 +5,7 @@
       :rows="firmDeclarationTableRows"
       :columns="firmDeclarationTableColumns"
       row-key="id"
-      separator="cell"
-    >
+      separator="cell">
       <template v-slot:body-cell-action="props">
         <q-td :props="props">
           <q-btn
@@ -15,26 +14,37 @@
             no-caps
             flat
             dense
-            @click="
-              deleteval(
-                firmDeclarationTableRows.indexOf(props.row),
-                props.row.planningDeclarationsId
-              )
-            "
-          />
+            @click="deleteval(firmDeclarationTableRows.indexOf(props.row),props.row.planningDeclarationsId)"/>
         </q-td>
       </template>
       <template v-slot:body-cell-approval="props">
         <q-td :props="props">
           <span v-if="props.row.approval === 0">
+                <q-btn
+                  size="35px"
+                  round
+                  color="teal"
+                  icon="picture_as_pdf"
+                />
             <q-badge color="red" label="Onaylandı"
           /></span>
           <span v-if="props.row.approval === 1">
             <q-badge color="secondary" label="İptal"
           /></span>
           <span v-if="props.row.approval === 188">
-            <q-badge color="primary" label="Gib Bekleniyor"
-          /></span>
+          <q-btn
+            round
+            size="15px"
+            color="red"
+            disable
+            label="T "
+          />
+           <q-btn
+             round
+             size="15px"
+             color="green"
+             label="B "
+           /></span>
         </q-td>
       </template>
     </q-table>
@@ -74,6 +84,12 @@ export default {
       },
       {
         label: "Gib Tarihi",
+        align: "left",
+        field: "verificationDate",
+        style: "width: 10px",
+      },
+      {
+        label: "Ödeme Listesinde",
         align: "left",
         field: "verificationDate",
         style: "width: 10px",

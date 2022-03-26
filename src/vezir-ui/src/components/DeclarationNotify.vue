@@ -60,24 +60,8 @@
           />
         </div>
 
-        <div class="col-xs-12 col-sm-6 col-md-4">
-          <q-toggle
-            v-model="payment"
-            color="orange-10"
-            icon="account_balance_wallet"
-            size="xl"
-            label="Ödeme Listesi"
-          />
-        </div>
-        <div class="col-xs-12 col-sm-6 col-md-4">
-          <q-toggle
-            v-model="hand"
-            color="warning"
-            icon="pan_tool"
-            size="xl"
-            label="Elden Teslim"
-          />
-        </div>
+
+
       </q-card-section>
     </q-card>
   </q-dialog>
@@ -90,8 +74,7 @@ export default {
   // name: 'ComponentName',
 
   props: {
-    id: String,
-    openpopup: Boolean,
+    id: Number,
   },
   setup(props) {
     const dialog = ref(props.openpopup);

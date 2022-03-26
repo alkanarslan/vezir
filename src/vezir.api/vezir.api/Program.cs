@@ -49,11 +49,13 @@ builder.Services.AddCors(options =>
             builder.SetIsOriginAllowed(_ => true).AllowAnyMethod().AllowAnyHeader().AllowCredentials();
         });
 });
+
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ICurrentAccount, CurrentAccountService>();
 builder.Services.AddTransient<ILookupRepository, LookupRepository>();
+builder.Services.AddTransient<IFirmContactService, FirmContactServiceRepository>();
 builder.Services.AddTransient<IDeclarationsService, DeclarationsRepository>();
 builder.Services.AddTransient<ITaxOfficeRepository, TaxOfficeRepository>();
 builder.Services.AddTransient<IFirmDeclarationsService, FirmDeclarationsRepository>();
@@ -71,7 +73,11 @@ builder.Services.AddQuartz(q =>
 builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 var app = builder.Build();
 
-
+app.UseReDoc(options =>
+{
+    options.DocumentTitle = "ReDoc Sample Project";
+    options.SpecUrl = "/swagger/v1/swagger.json";
+});
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

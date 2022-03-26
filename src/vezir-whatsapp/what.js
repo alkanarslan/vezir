@@ -46,7 +46,7 @@ client.on("disconnected", (reason) => {
 client.initialize();
 
 connection.on("GibScan", (data) => {
-  client.sendMessage("905542702497@c.us", "Canım");
+  client.sendMessage("905353482020@c.us", "lannnn");
   console.log(data);
 
   //connection.invoke("SendMessage", "4");

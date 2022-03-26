@@ -31,7 +31,7 @@
                   icon="settings_accessibility"
                   label="İletişim Bilgileri"
                 />
-                <q-tab name="movies" icon="alarm" label="Bildirimler" />
+                <q-tab name="movies" icon="alarm" label="Bildirim Logları" />
                 <q-tab
                   name="mails"
                   icon="settings"
@@ -126,7 +126,8 @@
                 </q-tab-panel>
                 <q-tab-panel name="alarms">
                   <div class="text-h6">İletişim Bilgileri</div>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  <firm-contacts
+                                 :firmId="currentRouteID"></firm-contacts>
                 </q-tab-panel>
                 <q-tab-panel name="movies">
                   <div class="text-h6">Bildirimler</div>
@@ -149,6 +150,7 @@ import { useRoute } from "vue-router";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import FirmOfDeclaration from "../components/FirmOfDeclaration.vue";
 import DeclarationNotify from "src/components/DeclarationNotify.vue";
+import FirmContacts from "components/FirmContacts";
 
 const declarationsOptions = [];
 export default {
@@ -295,6 +297,6 @@ export default {
       },
     };
   },
-  components: { FirmOfDeclaration, DeclarationNotify },
+  components: {FirmContacts, FirmOfDeclaration, DeclarationNotify },
 };
 </script>

@@ -1,19 +1,11 @@
 <template>
-  <q-btn
-    color="primary"
-    icon-right="alarm"
-    no-caps
-    flat
-    dense
-    @click="dialog = true"
-  />
+  <q-btn push color="white" text-color="primary" label="Kişi Ekle" icon="person_add" @click="dialog = true" />
   <q-dialog
     v-model="dialog"
     persistent
     :maximized="maximizedToggle"
     transition-show="slide-up"
-    transition-hide="slide-down"
-  >
+    transition-hide="slide-down">
     <q-card>
       <q-bar>
         <q-space />
@@ -37,102 +29,99 @@
       </q-bar>
 
       <q-card-section>
-        <div class="text-h6 text-center">Bildirim Ayarları</div>
+        <div class="text-h6 text-center">Kişi Ekle</div>
       </q-card-section>
 
       <q-card-section class="q-pt-none">
-        <div class="col-xs-12 col-sm-6 col-md-4">
-          <q-toggle
-            v-model="whatsapp"
-            icon="whatsapp"
-            color="green"
-            size="xl"
-            label="Whatsapp Bildirimi"
-          />
-        </div>
-        <div class="col-xs-12 col-sm-6 col-md-4">
-          <q-toggle
-            v-model="mail"
-            color="blue"
-            icon="mail"
-            size="xl"
-            label="Email Bildirimi"
-          />
-        </div>
+        <div style="min-width: 300px">
 
-        <div class="col-xs-12 col-sm-6 col-md-4">
-          <q-toggle
-            v-model="payment"
-            color="orange-10"
-            icon="account_balance_wallet"
-            size="xl"
-            label="Ödeme Listesi"
+          <q-form @submit="onSubmit" class="q-gutter-md">
+            <q-input
+              filled
+              v-model="name"
+              label="Adı Soyadı*"
+              lazy-rules
+              :rules="[(val) => (val && val.length > 0) || 'Gerekli Alan...']"
+            />
+            <q-input
+              filled
+              v-model="email"
+              label="E-Posta*"
+              lazy-rules
+              :rules="[(val) => (val && val.length > 0) || 'Gerekli Alan...']"
+            />
+            <q-input
+            filled
+            v-model="phonenumber"
+            label="Telefon No*"
+            lazy-rules
+            mask="#(###) ### - ####"
+            unmasked-value
+
           />
-        </div>
-        <div class="col-xs-12 col-sm-6 col-md-4">
-          <q-toggle
-            v-model="hand"
-            color="warning"
-            icon="pan_tool"
-            size="xl"
-            label="Elden Teslim"
-          />
+
+
+            <q-btn label="Kaydet" type="submit" style="min-width: 300px"  color="primary" />
+          </q-form>
         </div>
       </q-card-section>
     </q-card>
   </q-dialog>
+  <div class="q-pa-md">
+    <q-table title="Treats" :rows="firmContactTableRows" :columns="firmContactTableColumns" row-key="id">
+      <template v-slot:top>
+       <q-space />
+      </template>
+    </q-table>
+  </div>
 </template>
 
 <script>
 import { ref } from "vue";
 import { api } from "boot/axios";
+import {useQuasar} from "quasar";
 export default {
-  // name: 'ComponentName',
+  name: 'FirmContacts',
 
   props: {
-    id: String,
-    openpopup: Boolean,
+    firmId: String
   },
   setup(props) {
-    const dialog = ref(props.openpopup);
-    const firmDeclarationTableRows = ref([]);
-    const firmDeclarationTableColumns = [
+    const $q = useQuasar();
+    const dialog = ref(false);
+    const name = ref(null);
+    const email = ref(null);
+    const phonenumber = ref(null);
+    const firmContactTableRows = ref([]);
+    const firmContactTableColumns = [
       {
-        name: "declarationId",
-        label: "ID",
-        field: "planningDeclarationsId",
+
+        label: "Kayıt ID",
+        field: "id",
         style: "width: 10px",
       },
       {
-        label: "Beyanname Türü",
+        label: "Adı Soyadı",
         align: "left",
-        field: "declarationComment",
+        field: "name",
       },
 
-      { label: "Dönem", field: "period", style: "width: 10px" },
       {
-        label: "Son Ödeme Tarihi",
+        label: "Telefon No",
         align: "left",
-        field: "lastPaymentDate",
+        field: "phoneNumber",
         style: "width: 10px",
       },
       {
-        label: "Gib Tarihi",
+        label: "E-Posta",
         align: "left",
-        field: "verificationDate",
+        field: "email",
         style: "width: 10px",
-      },
-      {
-        name: "approval",
-        label: "Durumu",
-        align: "left",
-        field: "approval",
-        style: "width: 5px",
-      },
+      }
     ];
-    const fetchFirmDeclarationData = async (id = 0) => {
+    const fetchContactData = async (id = 0) => {
       const response = await api
-        .get("/api/declarations/firm-of-declarations", {
+        .get("/api/firmcontact", {
           params: {
             firmId: id,
           },
@@ -140,18 +129,47 @@ export default {
         .catch((error) => {
           console.log(error);
         });
-      firmDeclarationTableRows.value = response.data;
+      firmContactTableRows.value = response.data;
     };
-    //fetchFirmDeclarationData(props.firmId);
+    fetchContactData(props.firmId);
     return {
       dialog,
       maximizedToggle: ref(false),
-      firmDeclarationTableRows,
-      firmDeclarationTableColumns,
-      whatsapp: ref(true),
-      mail: ref(true),
-      payment: ref(false),
-      hand: ref(true),
+      firmContactTableRows,
+      firmContactTableColumns,
+      name,
+      phonenumber,
+      email,
+      onSubmit() {
+        const sendData = {
+          name: name.value,
+          phoneNumber: phonenumber.value,
+          email: email.value,
+          currentAccountId:props.firmId,
+
+        };
+        api
+          .post("/api/firmcontact", sendData)
+          .then((res) => {
+            $q.notify({
+              type: "positive",
+              message: "Kayıt Başarılı",
+              position: "center",
+            });
+            dialog.value = false;
+            fetchContactData(props.firmId);
+          })
+          .finally(() => {})
+          .catch((err) => {
+            console.log(sendData);
+            $q.notify({
+              type: "negative",
+              message: err.message,
+              position: "center",
+            });
+            // console.log(err);
+          });
+      },
     };
   },
 };
