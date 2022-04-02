@@ -25,15 +25,15 @@
                   icon="assessment"
                   label="Beyanname Bildirimleri"
                 />
-                <q-tab name="firms" icon="domain" label="Firma Bilgileri" />
+                <q-tab name="firmInfo" icon="domain" label="Firma Bilgileri" />
                 <q-tab
-                  name="alarms"
+                  name="contactInfo"
                   icon="settings_accessibility"
                   label="İletişim Bilgileri"
                 />
-                <q-tab name="movies" icon="alarm" label="Bildirim Logları" />
+
                 <q-tab
-                  name="mails"
+                  name="declarationSettings"
                   icon="settings"
                   label="Beyanname Ayarları"
                 />
@@ -41,14 +41,11 @@
               <q-separator />
               <q-tab-panels v-model="tab" animated keep-alive>
                 <q-tab-panel name="declarationNotify">
-                  <div class="text-h6">Firma Bilgileri</div>
                   <FirmOfDeclaration
                     :firmId="currentRouteID"
                   ></FirmOfDeclaration>
                 </q-tab-panel>
-                <q-tab-panel name="mails">
-                  <div class="text-h6">Beyanname Listesi</div>
-
+                <q-tab-panel name="declarationSettings">
                   <form @submit.prevent="simulateSubmit" class="q-pa-md">
                     <div class="q-pa-md">
                       <q-select
@@ -100,7 +97,7 @@
                       <template v-slot:body-cell-action="props">
                         <q-td :props="props">
                           <DeclarationNotify
-                            :id="props.row.id"
+                            :declaration-id="props.row.id" :firm-id="currentRouteID" :title="props.row.name"
                           ></DeclarationNotify>
                           <q-btn
                             color="negative"
@@ -120,18 +117,9 @@
                     </q-table>
                   </div>
                 </q-tab-panel>
-                <q-tab-panel name="firms">
-                  <div class="text-h6">Firma Bilgileri</div>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </q-tab-panel>
-                <q-tab-panel name="alarms">
-                  <div class="text-h6">İletişim Bilgileri</div>
-                  <firm-contacts
-                                 :firmId="currentRouteID"></firm-contacts>
-                </q-tab-panel>
-                <q-tab-panel name="movies">
-                  <div class="text-h6">Bildirimler</div>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                <q-tab-panel name="firmInfo">ddd</q-tab-panel>
+                <q-tab-panel name="contactInfo">
+                  <firm-contacts :firmId="currentRouteID"></firm-contacts>
                 </q-tab-panel>
               </q-tab-panels>
             </q-card>

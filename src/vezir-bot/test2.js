@@ -4,7 +4,8 @@ const cheerio = require("cheerio");
 const path = require("path");
 const download = require("download");
 const axios = require("axios");
-
+const fs = require("fs");
+const pdfSavePath= "/Users/alkanarslan/kodpoint-project/vezir/pdf-disk/";
 const scrapedData = [
   {
     gibDeclarationId: "11l06ove871neu",
@@ -655,20 +656,42 @@ const scrapedData = [
     gibPeriod: "02/2022-02/2022",
   },
 ];
-(async () => {
-  var myJsonString = JSON.stringify(scrapedData);
-  //var itemList = JSON.parse(scrapedData);
-  axios
-    .post("http://localhost:5092/api/declarationsVerification", {
-      allList: scrapedData,
-    })
-    .then((res) => {
-      console.log(`statusCode: ${res.status}`);
-      console.log(res);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
 
-  //console.log(myJsonString);
+
+(async () => {
+
+async function createFolderAndDownload(folderName, downloadUrl) {
+
+  const folderPath = pdfSavePath + folderName;
+  console.log(folderPath);
+  if (!fs.existsSync(folderPath)) {
+    fs.mkdirSync(folderPath);
+  }
+  await download(downloadUrl, folderPath);
+}
+
+
+
+
+await  createFolderAndDownload("alkan","http://www.africau.edu/images/default/sample.pdf")
+
 })();
+
+
+// (async () => {
+//   var myJsonString = JSON.stringify(scrapedData);
+//   //var itemList = JSON.parse(scrapedData);
+//   axios
+//     .post("http://localhost:5092/api/declarationsVerification", {
+//       allList: scrapedData,
+//     })
+//     .then((res) => {
+//       console.log(`statusCode: ${res.status}`);
+//       console.log(res);
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//     });
+//
+//   //console.log(myJsonString);
+// })();

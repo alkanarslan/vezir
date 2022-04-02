@@ -50,10 +50,10 @@ namespace vezir.api.Controllers
 
         [Route("api/Declarations/Signaldeneme")]
         [HttpGet]
-        public async Task<IActionResult> All2Declarations(string id)
+        public async Task<IActionResult> All2Declarations(int id)
         {
-            //   await _planningDeclarationsService.CalcPlan(1);
-            await _declarationsHub.Clients.All.SendAsync("GibScan", id);
+               await _planningDeclarationsService.CalcPlan(id);
+         //   await _declarationsHub.Clients.All.SendAsync("GibScan", id);
 
             return Ok();
         }

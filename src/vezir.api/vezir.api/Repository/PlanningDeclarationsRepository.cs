@@ -22,6 +22,8 @@ public class PlanningDeclarationsRepository : GenericRepository<PlanningDeclarat
         foreach (var item in firmPlan)
         {
             var declaration = await Context.Declarations.FirstOrDefaultAsync(p => p.Id == item.DeclarationsId);
+            
+            Console.Write(declaration.TimeType);
             switch (declaration.TimeType)
             {
                 case 24: //Aylık
@@ -30,13 +32,15 @@ public class PlanningDeclarationsRepository : GenericRepository<PlanningDeclarat
 
                     var periodMonth =
                         $"{planDate.ToString("MM")}/{planDate.Year}-{planDate.ToString("MM")}/{planDate.Year}";
+                    var lastPaymentDate = new DateTime(planDate.Year, planDate.Month, declaration.LastDay).AddMonths(1);
+                    Console.Write(lastPaymentDate);
                     var itemPlanDeclarations = new PlanningDeclarations
                     {
                         CreateDate = DateTime.Now,
                         FirmId = item.FirmId,
                         DeclarationsId = item.DeclarationsId,
                         Period = periodMonth,
-                        LastPaymentDate = new DateTime(planDate.Year, planDate.Month, declaration.LastDay).AddMonths(1)
+                        LastPaymentDate =lastPaymentDate
                     };
                     await Context.PlanningDeclarations.AddAsync(itemPlanDeclarations);
                     await SaveChangesAsync();
@@ -44,7 +48,7 @@ public class PlanningDeclarationsRepository : GenericRepository<PlanningDeclarat
                     break;
                 case 25://3 Aylık
                     
-                    var whoPeriod = Math.Ceiling((double)today.Month / (double)3);
+                    var whoPeriod = Math.Ceiling((double)today.Month / 3);
 
                     var lastMonthPeriod = whoPeriod * 3;
                     var firstMonthPeriod = lastMonthPeriod - 2;
@@ -54,15 +58,16 @@ public class PlanningDeclarationsRepository : GenericRepository<PlanningDeclarat
 
                     var period3Month =
                         $"{firstRangePeriod.ToString("MM")}/{firstRangePeriod.Year}-{lastRangePeriod.ToString("MM")}/{lastRangePeriod.Year}";
-
+                    var lastPaymentDate3 =
+                        new DateTime(lastRangePeriod.Year, lastRangePeriod.Month, declaration.LastDay)
+                            .AddMonths(1);
                     var itemPlanDeclarations1 = new PlanningDeclarations
                     {
                         CreateDate = DateTime.Now,
                         FirmId = item.FirmId,
                         DeclarationsId = item.DeclarationsId,
                         Period = period3Month,
-                        LastPaymentDate = new DateTime(lastRangePeriod.Year, lastRangePeriod.Month, declaration.LastDay)
-                            .AddMonths(1)
+                        LastPaymentDate = lastPaymentDate3
                     };
                     await Context.PlanningDeclarations.AddAsync(itemPlanDeclarations1);
                     await SaveChangesAsync();

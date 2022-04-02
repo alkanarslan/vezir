@@ -68,9 +68,11 @@
     </q-card>
   </q-dialog>
   <div class="q-pa-md">
-    <q-table title="Treats" :rows="firmContactTableRows" :columns="firmContactTableColumns" row-key="id">
-      <template v-slot:top>
-       <q-space />
+    <q-table  separator="cell" :rows="firmContactTableRows" :columns="firmContactTableColumns" row-key="id">
+      <template v-slot:body-cell-edit="props">
+        <q-td :props="props">
+        <declaration-notify :title="props.row.name"></declaration-notify>
+        </q-td>
       </template>
     </q-table>
   </div>
@@ -80,9 +82,10 @@
 import { ref } from "vue";
 import { api } from "boot/axios";
 import {useQuasar} from "quasar";
+import DeclarationNotify from "components/DeclarationNotify";
 export default {
   name: 'FirmContacts',
-
+  components: {DeclarationNotify},
   props: {
     firmId: String
   },
@@ -117,7 +120,14 @@ export default {
         align: "left",
         field: "email",
         style: "width: 10px",
-      }
+      },
+      {
+        name: "edit",
+        label: "Durumu",
+        align: "left",
+        field: "approval",
+        style: "width: 5px",
+      },
     ];
     const fetchContactData = async (id = 0) => {
       const response = await api

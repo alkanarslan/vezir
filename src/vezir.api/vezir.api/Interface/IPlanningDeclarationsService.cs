@@ -10,7 +10,7 @@ namespace vezir.api.Interface;
 
 public interface IPlanningDeclarationsService : IGenericRepository<PlanningDeclarations>
 {
-    Task CalcPlan(int FirmId);
+    Task CalcPlan(int firmId);
     Task<List<DeclarationNotificationsRequestModel>> GetPlanResultService(int firmId);
     
 }
