@@ -1,6 +1,6 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vezir.api", "vezir.api.csproj", "{FAC6A1C7-7059-4320-B969-498745295E47}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vezir.api", "vezir.api.csproj", "{FAC6A1C7-7059-4320-B969-498745295E47}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
